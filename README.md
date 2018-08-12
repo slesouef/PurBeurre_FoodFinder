@@ -25,6 +25,10 @@ The database is automatically populated with the a filtered version of the retri
 - In the case where the user enters an incorrect search value, the selection request is repeated
 
 # Specifications:
+- The application will be configurable in order to fit the user's 
+environment. The MySQL server information and the API call page size parameter 
+will be in a separate configuration file.
+  
 - at first launch, create and populate the database with information retrieved from Open Food Facts
     - check if database exists
     - automatically run database creation script
