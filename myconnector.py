@@ -20,10 +20,10 @@ class Database:
 
     def connect(self):
         """connect to the database"""
-        connection = pymysql.connect(host='self.host', port='self.port',
-                                     user='self.user',
-                                     password='self.password',
-                                     database='self.db')
+        connection = pymysql.connect(host=self.host,
+                                     user=self.user,
+                                     password=self.password,
+                                     database=self.dbname)
         return connection
 
     def check_database(self, connection):
@@ -34,7 +34,7 @@ class Database:
         cursor.execute(db_check)
         result = cursor.fetchall()
         return result
-    
+
     def create_db(self, file):
         """create database from script"""
 

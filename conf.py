@@ -6,8 +6,7 @@
 USER = 'test'
 PASSWORD = 'test'
 SERVEUR = 'localhost'
-PORT = '8888'
-DBNAME = 'Test'
+DBNAME = 'test'
 
 # API call configutation
 URL = 'https://fr.openfoodfacts.org/cgi/search.pl?action=process&sort_by' \
