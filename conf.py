@@ -6,6 +6,7 @@
 USER = 'test'
 PASSWORD = 'test'
 SERVEUR = 'localhost'
+PORT = '8888'
 DBNAME = 'Test'
 
 # API call configutation
