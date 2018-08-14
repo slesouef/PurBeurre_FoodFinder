@@ -17,7 +17,6 @@ The database is automatically populated with the a filtered version of the retri
     - Substitute product name
     - Substitute product description
     - Health rating of the substitute
-    - Name of the place where the product can be found
     - Link to the Open Food Facts product's page
 
 - The user can save a search once it has been completed
@@ -26,8 +25,7 @@ The database is automatically populated with the a filtered version of the retri
 
 # Specifications:
 - The application will be configurable in order to fit the user's 
-environment. The MySQL server information and the API call page size parameter 
-will be in a separate configuration file.
+environment. The MySQL server information and the API call page size parameter will be in a separate configuration file.
   
 - at first launch, create and populate the database with information retrieved from Open Food Facts
     - check if database exists
@@ -36,7 +34,6 @@ will be in a separate configuration file.
     - filter information from Open Food Facts and insert in database
 
 # Resources:
-
 [Open Food Facts API](http://en.wiki.openfoodfacts.org/Project:API)
 
 # Deliveries:
