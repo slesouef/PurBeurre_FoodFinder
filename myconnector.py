@@ -29,8 +29,7 @@ class Database:
     def check_database(self, connection):
         """verify the database has been created"""
         cursor = connection.cursor()
-        db_check = 'SELECT * FROM {}.INFORMATION_SCHEMA.TABLES'.format(
-                self.dbname)
+        db_check = 'SHOW TABLES'
         cursor.execute(db_check)
         result = cursor.fetchall()
         return result
