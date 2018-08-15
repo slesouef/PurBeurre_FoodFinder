@@ -20,11 +20,15 @@ class Database:
 
     def connect(self):
         """connect to the database"""
-        connection = pymysql.connect(host=self.host,
+        try:
+            connection = pymysql.connect(host=self.host,
                                      user=self.user,
                                      password=self.password,
                                      database=self.dbname)
-        return connection
+            return connection
+        except pymysql.err.InternalError:
+             print('The database does not exist. Please check the '
+                   'configuration.')
 
     def check_database(self, connection):
         """verify the database has been created"""
