@@ -44,14 +44,48 @@ class Database:
 class Table:
     """interact with the content of the database"""
 
-    def search_category(self):
-        """search for categories"""
+# for all method below, data is a [column_name, column_value] tuple
 
-    def search_product(self):
-        """search foa products in a category"""
+    def create(self, connection, table_name, *data):
+        """create entries in database"""
+        # insert
+        cursor = connection.cursor()  # initiate cursor
+        # create insert statement
+        # insert
+        # INSERT INTO table_name (column1, column2, column3, ...)
+        # VALUES (value1, value2, value3, ...);
+        insert = 'statement'
+        cursor.execute(insert)  # execute request
 
-    def search_substitute(self):
-        """search for a substitute product"""
+    def read(self, connection, table_name, *column_name, **conditions):
+        """read entries in database"""
+        # select
+        cursor = connection.cursor()  # initiate cursor
+        # create select statement
+        # SELECT column1, column2, ...
+        # FROM table_name
+        # WHERE condition;
+        select = 'statement'
+        cursor.execute(select)  # execute request
 
-    def save_search(self):
-        """insert search results in history"""
+    def update(self, connection, table_name, *data,
+               **conditions):
+        """update entries in database"""
+        # update
+        cursor = connection.cursor()  # initiate cursor
+        # create update statement
+        # UPDATE table_name
+        # SET column1 = value1, column2 = value2, ...
+        # WHERE condition;
+        update = 'statement'
+        cursor.execute(update)  # execute request
+
+    def delete(self, connection, table_name, **conditions):
+        """delete entries in database"""
+        # delete
+        cursor = connection.cursor()  # initiate cursor
+        # create delete statement
+        # DELETE FROM table_name
+        # WHERE condition;
+        delete = 'statement'
+        cursor.execute(delete)  # execute request
