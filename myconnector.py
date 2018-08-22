@@ -117,5 +117,12 @@ class Table:
         # create delete statement
         # DELETE FROM table_name
         # WHERE condition;
-        delete = "statement"
+        delete_where = "DELETE FROM {}".format(table_name)
+        while len(conditions) > 0:
+            keys = []
+            keys += conditions.popitem()
+        condition_string = "{}={}".format(keys[0], keys[1])
+        delete = delete_where + " WHERE {}".format(condition_string)
         cursor.execute(delete)  # execute request
+        connection.commit()
+        # print(delete)
