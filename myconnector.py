@@ -46,7 +46,7 @@ class Table:
 
 # for all method below, data is a [column_name, column_value] tuple
 
-    def create(self, connection, table_name, *data):
+    def create(self, connection, table_name, **data):
         """create entries in database"""
         # insert
         cursor = connection.cursor()  # initiate cursor
@@ -54,9 +54,15 @@ class Table:
         # insert
         # INSERT INTO table_name (column1, column2, column3, ...)
         # VALUES (value1, value2, value3, ...);
-        insert = 'statement'
+        column = [a for a in data]
+        values = [data[a] for a in data]
+        where_insert = 'INSERT INTO {} {}'.format(table_name,
+                                                              tuple(column))
+        clean_insert = where_insert.replace('\'', '')
+        insert = clean_insert + ' VALUES {};'.format(tuple(values))
         cursor.execute(insert)  # execute request
-
+        connection.commit()
+        # print(insert)
     def read(self, connection, table_name, *column_name, **conditions):
         """read entries in database"""
         # select
