@@ -1,5 +1,5 @@
 #! usr/bin/env python3
-#! -*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 """contains method to interact with the MySQL database"""
 import pymysql
 
@@ -10,12 +10,12 @@ class Database:
     """Connect and create database"""
 
     def __init__(self):
-        #initiate user access
+        # initiate user access
         self.user = USER
         self.password = PASSWORD
-        #initiate database location
+        # initiate database location
         self.host = SERVEUR
-        #initiate database
+        # initiate database
         self.dbname = DBNAME
 
     def connect(self):
@@ -27,7 +27,7 @@ class Database:
                                      database=self.dbname)
             return connection
         except pymysql.err.InternalError:
-             print('The database does not exist. Please check the '
+            print('The database does not exist. Please check the '
                    'configuration.')
 
     def check_database(self, connection):
@@ -41,10 +41,9 @@ class Database:
     def create_db(self, file):
         """create database from script"""
 
+
 class Table:
     """interact with the content of the database"""
-
-# for all method below, data is a [column_name, column_value] tuple
 
     def create(self, connection, table_name, **data):
         """create entries in database"""
@@ -55,12 +54,13 @@ class Table:
         # VALUES (value1, value2, value3, ...);
         column = [a for a in data]
         values = [data[a] for a in data]
-        where_insert = 'INSERT INTO {} {}'.format(table_name, tuple(column))
-        clean_insert = where_insert.replace('\'', '')
-        insert = clean_insert + ' VALUES {};'.format(tuple(values))
+        where_insert = "INSERT INTO {} {}".format(table_name, tuple(column))
+        clean_insert = where_insert.replace("'", "")
+        insert = clean_insert + " VALUES {};".format(tuple(values))
         cursor.execute(insert)  # execute request
         connection.commit()
         # print(insert)
+
     def read(self, connection, table_name, *column_name, **conditions):
         """read entries in database"""
         # select
@@ -70,16 +70,16 @@ class Table:
         # FROM table_name
         # WHERE condition;
         column_list=[c for c in column_name]
-        separator = ', '
+        separator = ", "
         column = separator.join(column_list)
-        select_what = 'SELECT ' + column
-        select_where = select_what + ' FROM {}'.format(table_name)
+        select_what = "SELECT " + column
+        select_where = select_what + " FROM {}".format(table_name)
         if len(conditions) != 0:
             while len(conditions) > 0:
                 keys = []
                 keys += conditions.popitem()
-            condition_string = '{}={}'.format(keys[0], keys[1])
-            select = select_where + ' WHERE {}'.format(condition_string)
+            condition_string = "{}={}".format(keys[0], keys[1])
+            select = select_where + " WHERE {}".format(condition_string)
         else:
             select = select_where
         cursor.execute(select)  # execute request
@@ -96,8 +96,19 @@ class Table:
         # UPDATE table_name
         # SET column1 = value1, column2 = value2, ...
         # WHERE condition;
-        update = 'statement'
+        update_where = "UPDATE {}".format(table_name)
+        values = [a for a in data]
+        separator = ", "
+        updates = separator.join(values)
+        update_what = update_where + " SET {}".format(updates)
+        while len(conditions) > 0:
+            keys = []
+            keys += conditions.popitem()
+        condition_string = "{}={}".format(keys[0], keys[1])
+        update = update_what + " WHERE {}".format(condition_string)
         cursor.execute(update)  # execute request
+        connection.commit()
+        # print(update)
 
     def delete(self, connection, table_name, **conditions):
         """delete entries in database"""
@@ -106,5 +117,5 @@ class Table:
         # create delete statement
         # DELETE FROM table_name
         # WHERE condition;
-        delete = 'statement'
+        delete = "statement"
         cursor.execute(delete)  # execute request

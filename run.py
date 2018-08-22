@@ -17,14 +17,18 @@ def main_loop():
 
     # create info in database
     # table = Table()
-    # table.create(connection, 'test', name='briquets', quantity=100)
+    # table.create(connection, "test", name="briquets", quantity=100)
 
     # read info in database
-    table = Table()
-    select = table.read(connection, 'test', '*')
-    print(select)
+    # table = Table()
+    # select = table.read(connection, "test", "*")
+    # print(select)
 
-    #call API to retrieve data
+    # update info in database
+    table = Table()
+    table.update(connection, "test", "name='jouet'", "quantity='24'", id=4)
+
+    # call API to retrieve data
     # call = Call()
     # url = call.create_url()
     # call.api_request(url)
