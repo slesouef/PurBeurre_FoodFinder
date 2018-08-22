@@ -12,8 +12,17 @@ def main_loop():
     connection = db.connect()
 
     # check database content
-    check = db.check_database(connection)
-    print (check)
+    # check = db.check_database(connection)
+    # print (check)
+
+    # create info in database
+    # table = Table()
+    # table.create(connection, 'test', name='briquets', quantity=100)
+
+    # read info in database
+    table = Table()
+    select = table.read(connection, 'test', '*')
+    print(select)
 
     #call API to retrieve data
     # call = Call()

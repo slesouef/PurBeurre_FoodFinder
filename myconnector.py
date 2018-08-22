@@ -50,14 +50,12 @@ class Table:
         """create entries in database"""
         # insert
         cursor = connection.cursor()  # initiate cursor
-        # create insert statement
-        # insert
+        # create insert statement:
         # INSERT INTO table_name (column1, column2, column3, ...)
         # VALUES (value1, value2, value3, ...);
         column = [a for a in data]
         values = [data[a] for a in data]
-        where_insert = 'INSERT INTO {} {}'.format(table_name,
-                                                              tuple(column))
+        where_insert = 'INSERT INTO {} {}'.format(table_name, tuple(column))
         clean_insert = where_insert.replace('\'', '')
         insert = clean_insert + ' VALUES {};'.format(tuple(values))
         cursor.execute(insert)  # execute request
@@ -71,8 +69,23 @@ class Table:
         # SELECT column1, column2, ...
         # FROM table_name
         # WHERE condition;
-        select = 'statement'
+        column_list=[c for c in column_name]
+        separator = ', '
+        column = separator.join(column_list)
+        select_what = 'SELECT ' + column
+        select_where = select_what + ' FROM {}'.format(table_name)
+        if len(conditions) != 0:
+            while len(conditions) > 0:
+                keys = []
+                keys += conditions.popitem()
+            condition_string = '{}={}'.format(keys[0], keys[1])
+            select = select_where + ' WHERE {}'.format(condition_string)
+        else:
+            select = select_where
         cursor.execute(select)  # execute request
+        result = cursor.fetchall()
+        return result
+        # print(select_how)
 
     def update(self, connection, table_name, *data,
                **conditions):
