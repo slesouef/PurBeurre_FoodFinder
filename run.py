@@ -29,8 +29,8 @@ def main_loop():
     # table.update(connection, "test", "name='jouet'", "quantity='24'", id=4)
 
     # delete info in database
-    table = Table()
-    table.delete(connection, "test", id=1)
+    # table = Table()
+    # table.delete(connection, "test", id=1)
 
     # call API to retrieve data
     # call = Call()
