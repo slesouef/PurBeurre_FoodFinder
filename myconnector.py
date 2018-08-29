@@ -17,8 +17,10 @@ class Database:
         self.host = SERVEUR
         # initiate database
         self.dbname = DBNAME
+        # initiate connection
+        self.connection = self.__connect()
 
-    def connect(self):
+    def __connect(self):
         """connect to the database"""
         try:
             connection = pymysql.connect(host=self.host,
@@ -30,9 +32,9 @@ class Database:
             print('The database does not exist. Please check the '
                    'configuration.')
 
-    def check_database(self, connection):
+    def check_database(self):
         """verify the database has been created"""
-        cursor = connection.cursor()
+        cursor = self.connection.cursor()
         db_check = 'SHOW TABLES'
         cursor.execute(db_check)
         result = cursor.fetchall()
@@ -45,24 +47,37 @@ class Database:
 class Table:
     """interact with the content of the database"""
 
-    def create(self, connection, table_name, **data):
+    def __init__(self, database):
+        # initiate connection
+        self.connection = database.connection
+
+    def create(self, object):
         """create entries in database"""
-        cursor = connection.cursor()  # initiate cursor
-        # create insert statement:
-        # INSERT INTO table_name (column1, column2, column3, ...)
-        # VALUES (value1, value2, value3, ...);
-        # extract information from data dictionary
-        column = [a for a in data]
-        values = [data[a] for a in data]
-        # insert target information in SQL request string
-        where_insert = "INSERT INTO {} {}".format(table_name, tuple(column))
-        # remove unnecessary characters from request string
-        clean_insert = where_insert.replace("'", "")
-        # insert value information in SQL request string
-        insert = clean_insert + " VALUES {};".format(tuple(values))
-        # execute request
-        cursor.execute(insert)
-        connection.commit()
+        cursor = self.connection.cursor()  # initiate cursor
+        # extract information from object data dictionary
+        data = list(object)
+        what = data[0]
+        where = data[1]
+        if what['id'] == None:
+            # create insert statement:
+            # INSERT INTO table_name (column1, column2, column3, ...)
+            # VALUES ('value1', 'value2', 'value3', ...);
+            c_list = [x for x in what if x != 'id']
+            separator = ", "
+            columns = separator.join(c_list)
+            v_list = [what.get(x) for x in what if x != 'id']
+            values = separator.join(v_list)
+            # create request string
+            insert = "INSERT INTO {} ({}) VALUES ({});".format(where, columns,
+                                                              values)
+            # execute request
+            cursor.execute(insert)
+            self.connection.commit()
+            # return id
+            id = cursor.lastrowid
+            return id
+        else:
+            pass
 
     def read(self, connection, table_name, *column_name, **conditions):
         """read entries in database"""

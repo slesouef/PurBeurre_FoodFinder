@@ -3,21 +3,28 @@
 """main application file. Contains main loop."""
 # from myrequest import *
 from myconnector import *
+from product import *
 
 
 def main_loop():
 
     # connect to database
     db = Database()
-    connection = db.connect()
 
     # check database content
-    # check = db.check_database(connection)
+    # check = db.check_database()
     # print (check)
 
     # create info in database
-    # table = Table()
+    table = Table(db)
     # table.create(connection, "test", name="briquets", quantity=100)
+    product = Product("'joujoux'", "'7'")
+    entry = product.create_object()
+    id = table.create(entry)
+    entry = product.update_object(entry, id)
+    print(entry)
+    # print(what)
+    # print(where)
 
     # read info in database
     # table = Table()
