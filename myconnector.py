@@ -34,14 +34,24 @@ class Database:
 
     def check_database(self):
         """verify the database has been created"""
-        cursor = self.connection.cursor()
-        db_check = 'SHOW TABLES'
-        cursor.execute(db_check)
+        cursor = self.connection.cursor()  # initiate cursor
+        # check if table exist
+        cursor.execute('SHOW TABLES')
         result = cursor.fetchall()
         return result
 
-    def create_db(self, file):
+    def create_tables(self, file):
         """create database from script"""
+        cursor = self.connection.cursor()
+        # open script
+        with open(file, "r") as fd:
+            # execute script
+            for line in fd:
+                cursor.execute(line)
+        # close file
+        fd.close()
+        # commit changes
+        self.connection.commit()
 
 
 class Table:

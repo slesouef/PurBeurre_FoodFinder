@@ -3,8 +3,8 @@
 """main application file. Contains main loop."""
 # from myrequest import *
 from myconnector import *
-from product import *
-
+# from product import *
+from conf import *
 
 def main_loop():
 
@@ -12,33 +12,26 @@ def main_loop():
     db = Database()
 
     # check database content
-    # check = db.check_database()
-    # print (check)
+    check = db.check_database()
+    print (check)
 
-    # create info in database
-    table = Table(db)
-    product = Product("'everything'", 42, 10)
-    entry = product.create()
+    # create tables
+    db.create_tables(SCRIPT)
+
+    # check database content
+    check = db.check_database()
+    print (check)
+
+    # DB CRUD
+    # table = Table(db)
+    # product = Product("'everything'", 42, 10)
+    # entry = product.create()
     # id = table.save(entry)
     # entry = product.update(entry, id)
-    update = table.save(entry)
-    read = table.read(entry)
+    # update = table.save(entry)
+    # read = table.read(entry)
     # delete = table.delete(entry)
-    print(read)
-
-
-    # read info in database
-    # table = Table()
-    # select = table.read(connection, "test", "*")
-    # print(select)
-
-    # update info in database
-    # table = Table()
-    # table.update(connection, "test", "name='jouet'", "quantity='24'", id=4)
-
-    # delete info in database
-    # table = Table()
-    # table.delete(connection, "test", id=1)
+    # print(read)
 
     # call API to retrieve data
     # call = Call()
