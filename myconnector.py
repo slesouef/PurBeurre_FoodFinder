@@ -60,8 +60,8 @@ class Table:
             # create insert statement:
             # INSERT INTO table_name (column1, column2, column3, ...)
             # VALUES ('value1', 'value2', 'value3', ...);
-            c_list = [x for x in d_values if x != 'id']
-            v_list = [d_values.get(x) for x in d_values if x != 'id']
+            c_list = [str(x) for x in d_values if x != 'id']
+            v_list = [str(d_values.get(x)) for x in d_values if x != 'id']
             separator = ", "
             columns = separator.join(c_list)
             values = separator.join(v_list)
@@ -72,19 +72,21 @@ class Table:
             cursor.execute(insert)
             self.connection.commit()
             # return id
-            id = cursor.lastrowid
-            return id
+            r_id = cursor.lastrowid
+            return r_id
         else:
             # create update statement
             # UPDATE table_name
             # SET column1 = value1, column2 = value2, ...
             # WHERE condition;
-            v_list = ["{}={}".format(x, d_values.get(x)) for x in d_values if x != 'id']
+            v_list = ["{}={}".format(x, d_values.get(x))
+                      for x in d_values if x != 'id']
             separator = ", "
             values = separator.join(v_list)
             row = d_values.get('id')
             # create request string
-            update = "UPDATE {} SET {} d_table id={};".format(d_table, values, row)
+            update = "UPDATE {} SET {} WHERE id={};".format(d_table, values,
+                                                            row)
             # execute request
             cursor.execute(update)
             self.connection.commit()
@@ -98,23 +100,23 @@ class Table:
         # WHERE condition;
         d_values, d_table = entry
         # create string from columns list
-        c_list = [x for x in d_values]
+        c_list = [str(x) for x in d_values]
         separator = ", "
         column = separator.join(c_list)
+        # create condition string
         row = "id={}".format(d_values['id'])
-        # insert columns in SQL request string
-        request = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
+        # create request string
+        select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
         # execute request
-        cursor.execute(request)
+        cursor.execute(select)
+        # retrieve response
         reply = cursor.fetchall()
+        # clean response
         extract,  = reply
         data = list(extract)
-        # result[*c_list] = *data
-        # return result
-        print(result)
-        print(c_list)
-        print(*c_list)
-        print(*data)
+        # insert response in dictionary
+        result = dict(zip(c_list, data))
+        return result
 
     def delete(self, entry):
         """delete entries in database"""
@@ -123,9 +125,10 @@ class Table:
         # DELETE FROM table_name
         # WHERE condition;
         d_values, d_table = entry
+        # create condition string
         row = "id={}".format(d_values['id'])
         # create request
-        request= "DELETE FROM {} WHERE {};".format(d_table, row)
+        delete = "DELETE FROM {} WHERE {};".format(d_table, row)
         # execute request
-        cursor.execute(request)
+        cursor.execute(delete)
         self.connection.commit()
