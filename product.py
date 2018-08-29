@@ -26,5 +26,5 @@ class Product:
     def update_object(self, object, id):
         data = list(object)
         value = data[0]
-        value["id"] = id
+        value["id"] = str(id)
         return object
