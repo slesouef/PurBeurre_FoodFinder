@@ -6,17 +6,17 @@ from conf import *
 
 class Product:
 
-    def __init__(self, name, quantity, id=None):
+    def __init__(self, name, quantity, pid=None):
         # data format
         self.db_format = {"name": "name", "quantity": "quantity", "id": "id"}
         # initialise data
         self.name = name
         self.quantity = quantity
-        self.id = id
+        self.id = pid
         # initialise table
         self.table = PRODUCT
 
-    def create_object(self):
+    def create(self):
         values = self.db_format
         values["name"] = self.name
         values["quantity"] = self.quantity
@@ -24,8 +24,7 @@ class Product:
         table_name = self.table
         return values, table_name
 
-    def update_object(self, object, id):
-        data = list(object)
-        value = data[0]
-        value["id"] = str(id)
-        return object
+    def update(self, entry, pid):
+        data, table = entry
+        data["id"] = pid
+        return entry
