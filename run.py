@@ -18,13 +18,14 @@ def main_loop():
     # create info in database
     table = Table(db)
     # table.create(connection, "test", name="briquets", quantity=100)
-    product = Product("'joujoux'", "'7'")
+    product = Product("'joujoux'", "'74'", "'17'")
     entry = product.create_object()
-    id = table.create(entry)
-    entry = product.update_object(entry, id)
-    print(entry)
+    # id = table.create(entry)
+    # entry = product.update_object(entry, id)
+    update = table.create(entry)
     # print(what)
     # print(where)
+    print(entry)
 
     # read info in database
     # table = Table()

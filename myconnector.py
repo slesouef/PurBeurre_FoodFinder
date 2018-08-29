@@ -51,7 +51,7 @@ class Table:
         # initiate connection
         self.connection = database.connection
 
-    def create(self, object):
+    def save(self, object):
         """create entries in database"""
         cursor = self.connection.cursor()  # initiate cursor
         # extract information from object data dictionary
@@ -63,9 +63,9 @@ class Table:
             # INSERT INTO table_name (column1, column2, column3, ...)
             # VALUES ('value1', 'value2', 'value3', ...);
             c_list = [x for x in what if x != 'id']
+            v_list = [what.get(x) for x in what if x != 'id']
             separator = ", "
             columns = separator.join(c_list)
-            v_list = [what.get(x) for x in what if x != 'id']
             values = separator.join(v_list)
             # create request string
             insert = "INSERT INTO {} ({}) VALUES ({});".format(where, columns,
@@ -77,7 +77,19 @@ class Table:
             id = cursor.lastrowid
             return id
         else:
-            pass
+            # create update statement
+            # UPDATE table_name
+            # SET column1 = value1, column2 = value2, ...
+            # WHERE condition;
+            v_list = ["{}={}".format(x, what.get(x)) for x in what if x != 'id']
+            separator = ", "
+            values = separator.join(v_list)
+            row = what.get('id')
+            # create request string
+            update = "UPDATE {} SET {} WHERE id={};".format(where, values, row)
+            # execute request
+            cursor.execute(update)
+            self.connection.commit()
 
     def read(self, connection, table_name, *column_name, **conditions):
         """read entries in database"""
@@ -110,34 +122,6 @@ class Table:
         cursor.execute(select)
         result = cursor.fetchall()
         return result
-
-    def update(self, connection, table_name, *data,
-               **conditions):
-        """update entries in database"""
-        cursor = connection.cursor()  # initiate cursor
-        # create update statement
-        # UPDATE table_name
-        # SET column1 = value1, column2 = value2, ...
-        # WHERE condition;
-        # add target table to SQL request string
-        update_where = "UPDATE {}".format(table_name)
-        # create string from data list
-        values = [a for a in data]
-        separator = ", "
-        updates = separator.join(values)
-        # add values to SQL request
-        update_what = update_where + " SET {}".format(updates)
-        # extract condition from dictionary
-        while len(conditions) > 0:
-            keys = []
-            keys += conditions.popitem()
-        # add condition to string
-        condition_string = "{}={}".format(keys[0], keys[1])
-        # update SQL request with condition
-        update = update_what + " WHERE {}".format(condition_string)
-        # execute request
-        cursor.execute(update)
-        connection.commit()
 
     def delete(self, connection, table_name, **conditions):
         """delete entries in database"""
