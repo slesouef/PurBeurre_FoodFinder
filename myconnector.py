@@ -24,13 +24,13 @@ class Database:
         """connect to the database"""
         try:
             connection = pymysql.connect(host=self.host,
-                                     user=self.user,
-                                     password=self.password,
-                                     database=self.dbname)
+                                         user=self.user,
+                                         password=self.password,
+                                         database=self.dbname)
             return connection
         except pymysql.err.InternalError:
-            print('The database does not exist. Please check the '
-                   'configuration.')
+            print(
+                'The database does not exist. Please check the configuration.')
 
     def check_database(self):
         """verify the database has been created"""
@@ -51,25 +51,23 @@ class Table:
         # initiate connection
         self.connection = database.connection
 
-    def save(self, object):
-        """create entries in database"""
+    def save(self, entry):
+        """modify the content of the database"""
         cursor = self.connection.cursor()  # initiate cursor
         # extract information from object data dictionary
-        data = list(object)
-        what = data[0]
-        where = data[1]
-        if what['id'] == None:
+        d_values, d_table = entry
+        if d_values['id'] is None:
             # create insert statement:
             # INSERT INTO table_name (column1, column2, column3, ...)
             # VALUES ('value1', 'value2', 'value3', ...);
-            c_list = [x for x in what if x != 'id']
-            v_list = [what.get(x) for x in what if x != 'id']
+            c_list = [x for x in d_values if x != 'id']
+            v_list = [d_values.get(x) for x in d_values if x != 'id']
             separator = ", "
             columns = separator.join(c_list)
             values = separator.join(v_list)
             # create request string
-            insert = "INSERT INTO {} ({}) VALUES ({});".format(where, columns,
-                                                              values)
+            insert = "INSERT INTO {} ({}) VALUES ({});".format(d_table, columns,
+                                                               values)
             # execute request
             cursor.execute(insert)
             self.connection.commit()
@@ -81,64 +79,53 @@ class Table:
             # UPDATE table_name
             # SET column1 = value1, column2 = value2, ...
             # WHERE condition;
-            v_list = ["{}={}".format(x, what.get(x)) for x in what if x != 'id']
+            v_list = ["{}={}".format(x, d_values.get(x)) for x in d_values if x != 'id']
             separator = ", "
             values = separator.join(v_list)
-            row = what.get('id')
+            row = d_values.get('id')
             # create request string
-            update = "UPDATE {} SET {} WHERE id={};".format(where, values, row)
+            update = "UPDATE {} SET {} d_table id={};".format(d_table, values, row)
             # execute request
             cursor.execute(update)
             self.connection.commit()
 
-    def read(self, connection, table_name, *column_name, **conditions):
+    def read(self, entry):
         """read entries in database"""
-        cursor = connection.cursor()  # initiate cursor
+        cursor = self.connection.cursor()  # initiate cursor
         # create select statement:
         # SELECT column1, column2, ...
         # FROM table_name
         # WHERE condition;
+        d_values, d_table = entry
         # create string from columns list
-        column_list = [c for c in column_name]
+        c_list = [x for x in d_values]
         separator = ", "
-        column = separator.join(column_list)
+        column = separator.join(c_list)
+        row = "id={}".format(d_values['id'])
         # insert columns in SQL request string
-        select_what = "SELECT " + column
-        # add target table to SQL request string
-        select_where = select_what + " FROM {}".format(table_name)
-        # check if conditions exist
-        if len(conditions) != 0:
-            # extract condition from dictonary
-            while len(conditions) > 0:
-                keys = []
-                keys += conditions.popitem()
-            # add condition values to a string
-            condition_string = "{}={}".format(keys[0], keys[1])
-            # add conditions to SQL request string
-            select = select_where + " WHERE {}".format(condition_string)
-        else:
-            select = select_where
+        request = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
         # execute request
-        cursor.execute(select)
-        result = cursor.fetchall()
-        return result
+        cursor.execute(request)
+        reply = cursor.fetchall()
+        extract,  = reply
+        data = list(extract)
+        # result[*c_list] = *data
+        # return result
+        print(result)
+        print(c_list)
+        print(*c_list)
+        print(*data)
 
-    def delete(self, connection, table_name, **conditions):
+    def delete(self, entry):
         """delete entries in database"""
-        cursor = connection.cursor()  # initiate cursor
+        cursor = self.connection.cursor()  # initiate cursor
         # create delete statement
         # DELETE FROM table_name
         # WHERE condition;
-        # add target table to SQL request string
-        delete_where = "DELETE FROM {}".format(table_name)
-        # extract condition from dictionary
-        while len(conditions) > 0:
-            keys = []
-            keys += conditions.popitem()
-        # add condition to string
-        condition_string = "{}={}".format(keys[0], keys[1])
-        # update SQL request
-        delete = delete_where + " WHERE {}".format(condition_string)
+        d_values, d_table = entry
+        row = "id={}".format(d_values['id'])
+        # create request
+        request= "DELETE FROM {} WHERE {};".format(d_table, row)
         # execute request
-        cursor.execute(delete)
-        connection.commit()
+        cursor.execute(request)
+        self.connection.commit()
