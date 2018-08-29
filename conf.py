@@ -15,3 +15,6 @@ PAGESIZE = 20
 
 # MySQL database creation file location
 SCRIPT = "data/creation_script.sql"
+
+# Database table lists
+PRODUCT = 'test'

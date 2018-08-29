@@ -1,6 +1,7 @@
 #! usr/bin/env python3
 # -*- coding:utf-8 -*-
 """Manipulate product objects"""
+from conf import *
 
 
 class Product:
@@ -13,7 +14,7 @@ class Product:
         self.quantity = quantity
         self.id = id
         # initialise table
-        self.table = "test"
+        self.table = PRODUCT
 
     def create_object(self):
         values = self.db_format
