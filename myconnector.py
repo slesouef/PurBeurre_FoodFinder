@@ -61,7 +61,7 @@ class Table:
         # initiate connection
         self.connection = database.connection
 
-    def save(self, entry):
+    def save(self, entry, **condition):
         """modify the content of the database"""
         cursor = self.connection.cursor()  # initiate cursor
         # extract information from object data dictionary
@@ -93,15 +93,16 @@ class Table:
                       for x in d_values if x != 'id']
             separator = ", "
             values = separator.join(v_list)
-            row = d_values.get('id')
+            selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+            concat = " and "
+            row = concat.join(selector)
             # create request string
-            update = "UPDATE {} SET {} WHERE id={};".format(d_table, values,
-                                                            row)
+            update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
             # execute request
             cursor.execute(update)
             self.connection.commit()
 
-    def read(self, entry):
+    def read(self, entry, **condition):
         """read entries in database"""
         cursor = self.connection.cursor()  # initiate cursor
         # create select statement:
@@ -114,21 +115,27 @@ class Table:
         separator = ", "
         column = separator.join(c_list)
         # create condition string
-        row = "id={}".format(d_values['id'])
+        selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+        concat = ' and '
+        row = concat.join(selector)
         # create request string
         select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
         # execute request
         cursor.execute(select)
         # retrieve response
         reply = cursor.fetchall()
-        # clean response
-        extract,  = reply
-        data = list(extract)
-        # insert response in dictionary
-        result = dict(zip(c_list, data))
+        extract = list(reply)
+        # insert responses in list
+        i = 0
+        result = []
+        while i < len(extract):
+            # create dictionary entry per row returned
+            single_row = dict(zip(c_list, extract[i]))
+            i += 1
+            result.append(single_row)
         return result
 
-    def delete(self, entry):
+    def delete(self, entry, **condition):
         """delete entries in database"""
         cursor = self.connection.cursor()  # initiate cursor
         # create delete statement
@@ -136,7 +143,9 @@ class Table:
         # WHERE condition;
         d_values, d_table = entry
         # create condition string
-        row = "id={}".format(d_values['id'])
+        selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+        concat = ' and '
+        row = concat.join(selector)
         # create request
         delete = "DELETE FROM {} WHERE {};".format(d_table, row)
         # execute request
