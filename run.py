@@ -17,14 +17,14 @@ def main_loop():
 
     # create info in database
     table = Table(db)
-    product = Product("'jouet'", 3, 4)
+    product = Product(None, None, None)
     entry = product.create()
     # id = table.save(entry)
     # entry = product.update(entry, id)
     # update = table.save(entry, id=4)
-    # read = table.read(entry, quantity=3)
-    delete = table.delete(entry, id=5)
-    # print(read)
+    read = table.read(entry, quantity=10)
+    # delete = table.delete(entry, id=5)
+    print(read)
 
 
     # read info in database

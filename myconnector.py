@@ -114,11 +114,15 @@ class Table:
         cursor.execute(select)
         # retrieve response
         reply = cursor.fetchall()
-        # clean response
-        extract,  = reply
-        data = list(extract)
-        # insert response in dictionary
-        result = dict(zip(c_list, data))
+        extract = list(reply)
+        # insert responses in list
+        i = 0
+        result = []
+        while i < len(extract):
+            # create dictionary entry per row returned
+            single_row = dict(zip(c_list, extract[i]))
+            i += 1
+            result.append(single_row)
         return result
 
     def delete(self, entry, **condition):
