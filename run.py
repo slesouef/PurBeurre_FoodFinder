@@ -4,7 +4,8 @@
 # from myrequest import *
 from myconnector import *
 # from product import *
-from categories import *
+# from categories import *
+from history import *
 
 from conf import *
 
@@ -14,32 +15,36 @@ def main_loop():
     db = Database()
 
     # check database content
-    check = db.check_database()
-    if not check :
+    # check = db.check_database()
+    # if not check :
         # create tables
-        db.create_tables(SCRIPT)
-    else:
-        print(check)
+        # db.create_tables(SCRIPT)
+    # else:
+    #     print("tables ok")
+    #     print(check)
 
     # DB CRUD
     table = Table(db)
-
-    # product entity
-    product = Product("'evian'", "'1L'", "'evian'", "'eau minerale'",
-                      "'http://test.off.org'", "'a'", 1, None)
-    entry = product.create()
-    pid = table.save(entry)
-    entry = product.update(entry, pid)
+    # product = Product("'evian'", "'250ml'", "'evian'", "'eau minerale'",
+    #                   "'http://test.off.org'", "'a'", 1, None)
+    # entry = product.create()
+    # pid = table.save(entry)
+    # entry = product.update(entry, pid)
     # update = table.save(entry)
     # read = table.read(entry)
     # delete = table.delete(entry)
-    print(entry)
+    # print(entry)
 
-    # category entity
-    category = Category("'beurre'", None)
-    entry = category.create()
-    cid = table.save(entry)
-    entry = category.update(entry, cid)
+    # category = Category("'beurre'", None)
+    # entry = category.create()
+    # cid = table.save(entry)
+    # entry = category.update(entry, cid)
+    # print(entry)
+
+    history = History(1, 3)
+    entry = history.create(history)
+    # table.save(entry)
+    # read = table.read(entry)
     print(entry)
 
     # call API to retrieve data
