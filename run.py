@@ -4,6 +4,8 @@
 # from myrequest import *
 from myconnector import *
 # from product import *
+from categories import *
+
 from conf import *
 
 def main_loop():
@@ -13,25 +15,32 @@ def main_loop():
 
     # check database content
     check = db.check_database()
-    print (check)
-
-    # create tables
-    db.create_tables(SCRIPT)
-
-    # check database content
-    check = db.check_database()
-    print (check)
+    if not check :
+        # create tables
+        db.create_tables(SCRIPT)
+    else:
+        print(check)
 
     # DB CRUD
-    # table = Table(db)
-    # product = Product("'everything'", 42, 10)
-    # entry = product.create()
-    # id = table.save(entry)
-    # entry = product.update(entry, id)
+    table = Table(db)
+
+    # product entity
+    product = Product("'evian'", "'1L'", "'evian'", "'eau minerale'",
+                      "'http://test.off.org'", "'a'", 1, None)
+    entry = product.create()
+    pid = table.save(entry)
+    entry = product.update(entry, pid)
     # update = table.save(entry)
     # read = table.read(entry)
     # delete = table.delete(entry)
-    # print(read)
+    print(entry)
+
+    # category entity
+    category = Category("'beurre'", None)
+    entry = category.create()
+    cid = table.save(entry)
+    entry = category.update(entry, cid)
+    print(entry)
 
     # call API to retrieve data
     # call = Call()
