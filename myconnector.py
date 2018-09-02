@@ -61,46 +61,52 @@ class Table:
         # initiate connection
         self.connection = database.connection
 
-    def save(self, entry, **condition):
+    def insert(self, entry):
         """modify the content of the database"""
         cursor = self.connection.cursor()  # initiate cursor
         # extract information from object data dictionary
         d_values, d_table = entry
-        if d_values['id'] is None:
-            # create insert statement:
-            # INSERT INTO table_name (column1, column2, column3, ...)
-            # VALUES ('value1', 'value2', 'value3', ...);
-            c_list = [str(x) for x in d_values if x != 'id']
-            v_list = [str(d_values.get(x)) for x in d_values if x != 'id']
-            separator = ", "
-            columns = separator.join(c_list)
-            values = separator.join(v_list)
-            # create request string
-            insert = "INSERT INTO {} ({}) VALUES ({});".format(d_table, columns,
+        # create insert statement:
+        # INSERT INTO table_name (column1, column2, column3, ...)
+        # VALUES ('value1', 'value2', 'value3', ...);
+        c_list = [str(x) for x in d_values if x != 'id']
+        v_list = [str(d_values.get(x)) for x in d_values if x != 'id']
+        separator = ", "
+        columns = separator.join(c_list)
+        values = separator.join(v_list)
+        # create request string
+        insert = "INSERT INTO {} ({}) VALUES ({});".format(d_table, columns,
                                                                values)
-            # execute request
-            cursor.execute(insert)
-            self.connection.commit()
-            # return id
-            r_id = cursor.lastrowid
-            return r_id
-        else:
-            # create update statement
-            # UPDATE table_name
-            # SET column1 = value1, column2 = value2, ...
-            # WHERE condition;
-            v_list = ["{}={}".format(x, d_values.get(x))
-                      for x in d_values if x != 'id']
-            separator = ", "
-            values = separator.join(v_list)
-            selector = ["{}={}".format(x, condition.get(x)) for x in condition]
-            concat = " and "
-            row = concat.join(selector)
-            # create request string
-            update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
-            # execute request
-            cursor.execute(update)
-            self.connection.commit()
+        # execute request
+        cursor.execute(insert)
+        self.connection.commit()
+        # return id
+        r_id = cursor.lastrowid
+        return r_id
+
+    def update(self, entry, **condition):
+        cursor = self.connection.cursor() # initiate cursor
+        # exctract information form entry object
+        d_values, d_table = entry
+        # create update statement
+        # UPDATE table_name
+        # SET column1 = value1, column2 = value2, ...
+        # WHERE condition;
+        v_list = ["{}={}".format(x, d_values.get(x))
+                  for x in d_values if x != 'id']
+        separator = ", "
+        values = separator.join(v_list)
+        selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+        concat = " and "
+        row = concat.join(selector)
+        # create request string
+        update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
+        # execute request
+        cursor.execute(update)
+        self.connection.commit()
+        # return id
+        r_id = cursor.lastrowid
+        return r_id
 
     def read(self, entry, **condition):
         """read entries in database"""
@@ -151,3 +157,6 @@ class Table:
         # execute request
         cursor.execute(delete)
         self.connection.commit()
+        # return id
+        r_id = cursor.lastrowid
+        return r_id
