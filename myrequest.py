@@ -14,15 +14,16 @@ class Call:
         # initialize api request
         self.url = URL
         self.pagesize = PAGESIZE
-        # initialize reponse object
-        self.data = {}
+        # initialise data
+        self.data ={}
 
     def create_url(self):
         """construct request URL"""
-        call = '{}&pagesize={}'.format(self.url, self.pagesize)
+        call = '{}&page_size={}'.format(self.url, self.pagesize)
         return call
 
     def api_request(self, url):
         """GET info from API and insert it into a dictionary object"""
         r = requests.get(url)
         self.data = r.json()
+        return self
