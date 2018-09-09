@@ -6,13 +6,15 @@ from myconnector import *
 from product import *
 from categories import *
 from history import *
+from filter import *
 
 from conf import *
+
 
 def main_loop():
 
     # connect to database
-    db = Database()
+    # db = Database()
 
     # check database content
     # check = db.check_database()
@@ -24,7 +26,7 @@ def main_loop():
     #     print(check)
 
     # DB CRUD
-    table = Table(db)
+    # table = Table(db)
     # product = Product("'evian'", "'150ml'", "'evian'", "'eau minerale'",
     #                   "'http://test.off.org'", "'a'", 1, 4)
     # entry = product.create()
@@ -52,9 +54,17 @@ def main_loop():
     # print(delete)
 
     # call API to retrieve data
-    # call = Call()
-    # url = call.create_url()
-    # call.api_request(url)
+    call = Call()
+    url = call.create_url()
+    data = call.api_request(url)
+    # data treatment
+    screen = Filter(data.data)
+    categories = screen.extract_categories()
+    print(categories)
+    # print(len(categories))
+    products = screen.extract_products()
+    print(products)
+    print(len(products))
 
     # print("1 - Quel aliment souhaitez-vous remplacer ?" + '\n' + "2 - "
     #                  "Retrouver mes aliments substitués.")
