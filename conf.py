@@ -20,3 +20,6 @@ SCRIPT = "data/creation_script.sql"
 PRODUCT = 'Products'
 CATEGORY = 'Categories'
 HISTORY = 'History'
+
+# set minimum category size
+MIN_SIZE = 3
