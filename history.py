@@ -7,21 +7,21 @@ from conf import *
 
 class History:
 
-    def __init__(self, searched_pid, substituted_pid):
+    def __init__(self, pid, sub_pid):
         # data format
         self.db_format = {
-            "searched_pid": "searched_pid",
-            "substituted_pid": "substituted_pid",
+            "pid": "pid",
+            "sub_pid": "sub_pid",
             "date": "CURRENT_TIMESTAMP"}
         # initiate data
-        self.searched_pid = searched_pid
-        self.substituted_pid = substituted_pid
+        self.pid = pid
+        self.sub_pid = sub_pid
         # initiate table
         self.table = HISTORY
 
-    def create(self, entry):
+    def create(self):
         values = self.db_format
-        values["searched_pid"] = self.searched_pid
-        values["substituted_pid"] = self.substituted_pid
+        values["pid"] = self.pid
+        values["sub_pid"] = self.sub_pid
         table_name = self.table
         return values, table_name
