@@ -7,23 +7,23 @@ from conf import *
 
 class Category:
 
-    def __init__(self, name=None, id=None):
+    def __init__(self, name=None, cid=None):
         # data format
-        self.db_format = {"name": "name", "id": "id"}
+        self.db_format = {"name": "name", "cid": "cid"}
         # initialise data
         self.name = name
-        self.id = id
+        self.cid = cid
         # initialise table
         self.table = CATEGORY
 
     def create(self):
         values = self.db_format
         values["name"] = self.name
-        values["id"] = self.id
+        values["cid"] = self.cid
         table_name = self.table
         return values, table_name
 
     def update(self, entry, cid):
         data, table = entry
-        data["id"] = cid
+        data["cid"] = cid
         return entry
