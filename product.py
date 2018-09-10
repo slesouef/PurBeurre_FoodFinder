@@ -7,12 +7,12 @@ from conf import *
 class Product:
 
     def __init__(self, name=None, quantity=None, brand=None, description=None,
-                 url=None, rating=None, category_id=None, pid=None):
+                 url=None, rating=None, cid=None, pid=None):
         # data format
         self.db_format = {
             "name": "name", "quantity": "quantity", "brand": "brand",
             "description": "description", "url": "url", "rating": "rating",
-            "category_id": "category_id", "id": "id"}
+            "cid": "cid", "pid": "pid"}
         # initialise data
         self.name = name
         self.quantity = quantity
@@ -20,8 +20,8 @@ class Product:
         self.description = description
         self.url = url
         self.rating = rating
-        self.category_id = category_id
-        self.id = pid
+        self.cid = cid
+        self.pid = pid
         # initialise table
         self.table = PRODUCT
 
@@ -33,12 +33,12 @@ class Product:
         values["description"] = self.description
         values["url"] = self.url
         values["rating"] = self.rating
-        values["category_id"] = self.category_id
-        values["id"] = self.id
+        values["cid"] = self.cid
+        values["pid"] = self.pid
         table_name = self.table
         return values, table_name
 
     def update(self, entry, pid):
         data, table = entry
-        data["id"] = pid
+        data["pid"] = pid
         return entry
