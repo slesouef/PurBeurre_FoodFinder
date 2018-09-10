@@ -14,7 +14,7 @@ from conf import *
 def main_loop():
 
     # connect to database
-    # db = Database()
+    db = Database()
 
     # check database content
     # check = db.check_database()
@@ -26,7 +26,7 @@ def main_loop():
     #     print(check)
 
     # DB CRUD
-    # table = Table(db)
+    table = Table(db)
     # product = Product("'evian'", "'150ml'", "'evian'", "'eau minerale'",
     #                   "'http://test.off.org'", "'a'", 1, 4)
     # entry = product.create()
@@ -37,14 +37,14 @@ def main_loop():
     # delete = table.delete(entry, id=4)
     # print(update)
 
-    # category = Category("'cola'", None)
-    # entry = category.create()
+    category = Category("'test3'", None)
+    entry = category.create()
     # cid = table.insert(entry)
     # entry = category.update(entry, cid)
-    # read = table.read(entry, id=2)
-    # cid = table.update(entry, id=1)
+    # read = table.read(entry, id=1)
+    cid = table.update(entry)
     # cid = table.delete(entry, id=3)
-    # print(cid)
+    print(cid)
 
     # history = History(1, 2)
     # entry = history.create(history)
@@ -53,18 +53,18 @@ def main_loop():
     # delete = table.delete(entry, searched_pid=1)
     # print(delete)
 
-    # call API to retrieve data
-    call = Call()
-    url = call.create_url()
-    data = call.api_request(url)
-    # data treatment
-    screen = Filter(data.data)
-    categories = screen.extract_categories()
-    print(categories)
-    # print(len(categories))
-    products = screen.extract_products()
-    print(products)
-    print(len(products))
+    # # call API to retrieve data
+    # call = Call()
+    # url = call.create_url()
+    # data = call.api_request(url)
+    # # data treatment
+    # screen = Filter(data.data)
+    # categories = screen.extract_categories()
+    # print(categories)
+    # # print(len(categories))
+    # products = screen.extract_products()
+    # print(products)
+    # print(len(products))
 
     # print("1 - Quel aliment souhaitez-vous remplacer ?" + '\n' + "2 - "
     #                  "Retrouver mes aliments substitués.")

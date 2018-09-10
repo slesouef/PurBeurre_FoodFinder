@@ -96,11 +96,18 @@ class Table:
                   for x in d_values if x != 'id']
         separator = ", "
         values = separator.join(v_list)
-        selector = ["{}={}".format(x, condition.get(x)) for x in condition]
-        concat = " and "
-        row = concat.join(selector)
-        # create request string
-        update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
+        # create selector
+        # check condition exists
+        if not condition:
+            # create update string with no where condition
+            update = "UPDATE {} SET {};".format(d_table, values)
+        else:
+            # create selector string
+            selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+            concat = " and "
+            row = concat.join(selector)
+            # create request string
+            update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
         # execute request
         cursor.execute(update)
         self.connection.commit()
@@ -121,11 +128,17 @@ class Table:
         separator = ", "
         column = separator.join(c_list)
         # create condition string
-        selector = ["{}={}".format(x, condition.get(x)) for x in condition]
-        concat = ' and '
-        row = concat.join(selector)
-        # create request string
-        select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
+        # check if conditions exist
+        if not condition:
+            # no condition, create select request with no where
+            select = "SELECT {} FROM {};".format(column, d_table)
+        else:
+            # if condition, add where to select
+            selector = ["{}={}".format(x, condition.get(x)) for x in condition]
+            concat = ' and '
+            row = concat.join(selector)
+            # create request string
+            select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
         # execute request
         cursor.execute(select)
         # retrieve response
