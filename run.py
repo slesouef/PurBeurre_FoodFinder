@@ -17,12 +17,12 @@ def main_loop():
     db = Database()
 
     # check database content
-    # check = db.check_database()
-    # if not check :
+    check = db.check_database()
+    if not check :
         # create tables
-        # db.create_tables(SCRIPT)
-    # else:
-    #     print("tables ok")
+        db.create_tables(SCRIPT)
+    else:
+        print("tables ok")
     #     print(check)
 
     # DB CRUD
@@ -37,14 +37,14 @@ def main_loop():
     # delete = table.delete(entry, id=4)
     # print(update)
 
-    category = Category("'test3'", None)
-    entry = category.create()
+    # category = Category("'test3'", None)
+    # entry = category.create()
     # cid = table.insert(entry)
     # entry = category.update(entry, cid)
     # read = table.read(entry, id=1)
-    cid = table.update(entry)
+    # cid = table.update(entry)
     # cid = table.delete(entry, id=3)
-    print(cid)
+    # print(cid)
 
     # history = History(1, 2)
     # entry = history.create(history)
@@ -53,18 +53,25 @@ def main_loop():
     # delete = table.delete(entry, searched_pid=1)
     # print(delete)
 
-    # # call API to retrieve data
-    # call = Call()
-    # url = call.create_url()
-    # data = call.api_request(url)
-    # # data treatment
-    # screen = Filter(data.data)
-    # categories = screen.extract_categories()
-    # print(categories)
-    # # print(len(categories))
-    # products = screen.extract_products()
-    # print(products)
-    # print(len(products))
+    # call API to retrieve data
+    call = Call()
+    url = call.create_url()
+    data = call.api_request(url)
+    # data treatment
+    screen = Filter(data.data)
+    screen.extract_categories()
+    screen.insert_categories(table)
+    cat = Category()
+    cat = cat.create()
+    cat_table = table.read(cat)
+    print(cat_table)
+    # print(len(categories))
+    screen.extract_products()
+    screen.insert_product(table)
+    prod = Product()
+    prod = prod.create()
+    prod_table = table.read(prod)
+    print(prod_table)
 
     # print("1 - Quel aliment souhaitez-vous remplacer ?" + '\n' + "2 - "
     #                  "Retrouver mes aliments substitués.")
