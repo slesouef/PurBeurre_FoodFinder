@@ -6,8 +6,8 @@ from conf import *
 
 class Product:
 
-    def __init__(self, name, quantity, brand, description, url, rating,
-                 category_id, pid=None):
+    def __init__(self, name=None, quantity=None, brand=None, description=None,
+                 url=None, rating=None, category_id=None, pid=None):
         # data format
         self.db_format = {
             "name": "name", "quantity": "quantity", "brand": "brand",

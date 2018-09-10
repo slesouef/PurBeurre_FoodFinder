@@ -7,7 +7,7 @@ from conf import *
 
 class Category:
 
-    def __init__(self, name, id=None):
+    def __init__(self, name=None, id=None):
         # data format
         self.db_format = {"name": "name", "id": "id"}
         # initialise data
