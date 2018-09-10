@@ -29,8 +29,7 @@ class Database:
                                          database=self.dbname)
             return connection
         except pymysql.err.InternalError:
-            print(
-                'The database does not exist. Please check the configuration.')
+            raise
 
     def check_database(self):
         """verify the database has been created"""
