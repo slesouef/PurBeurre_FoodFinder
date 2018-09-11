@@ -3,6 +3,9 @@
 """filtering of data from request in order to extract categories and products"""
 import re
 
+from categories import *
+from product import *
+
 from conf import PAGESIZE, MIN_SIZE
 
 
@@ -95,3 +98,43 @@ class Filter:
                 i += 1
         # return list of products by category
         return self.products
+
+    def insert_categories(self, table):
+        for i in self.categories:
+            # extract data
+            name = "'" + str(i) + "'"
+            # create category object
+            category = Category(name)
+            category = category.create()
+            # insert in database
+            try:
+                table.insert(category)
+            except:
+                pass
+
+    def insert_product(self, table):
+        for i in self.products:
+            # extract data
+            name = i["name"]
+            quantity = i["quantity"]
+            brand = i["brand"]
+            description = i["description"]
+            url = i["url"]
+            rating = i["rating"]
+            category = i["category"]
+            # get cid from category name
+            cat = Category(category)
+            cat = cat.create()
+            arg = '"' + category + '"'
+            cid = table.read(cat, name=arg)
+            cid = cid[0]
+            cid = cid["cid"]
+            # create product object
+            product = Product(name, quantity, brand, description, url,
+                              rating, cid)
+            product = product.create()
+            # insert in database
+            try:
+                table.insert(product)
+            except:
+                pass

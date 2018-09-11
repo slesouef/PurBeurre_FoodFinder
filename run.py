@@ -31,6 +31,7 @@ def main():
     else:
         print("The database does not exist. Please check the configuration.")
 
+
     # DB CRUD
     # table = Table(db)
     # product = Product("'evian'", "'150ml'", "'evian'", "'eau minerale'",
