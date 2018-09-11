@@ -2,8 +2,6 @@
 # -*- coding:utf-8 -*-
 """launch checks"""
 from myconnector import *
-from categories import *
-from product import *
 from myrequest import *
 from filter import *
 
@@ -22,7 +20,7 @@ class Launch:
     def check_db(self):
         # connect to database
         try:
-            db = Database()
+            Database()
             self.DB_ok = True
         # connection error
         except pymysql.err.InternalError:
@@ -52,9 +50,11 @@ class Launch:
         category = Category()
         product = Product()
         # check for content
-        entry = product.create()
-        select = table.read(entry)
-        if not select:
+        category = category.create()
+        product = product.create()
+        select_category = table.read(category)
+        select_product = table.read(product)
+        if not select_category and not select_product:
             # call API to retrieve data
             call = Call()
             url = call.create_url()
@@ -63,6 +63,17 @@ class Launch:
             screen = Filter(data.data)
             screen.extract_categories()
             screen.insert_categories(table)
+            screen.extract_products()
+            screen.insert_product(table)
+            self.content_ok = True
+        elif select_category != select_product:
+            # call API to retrieve data
+            call = Call()
+            url = call.create_url()
+            data = call.api_request(url)
+            # data treatment
+            screen = Filter(data.data)
+            screen.extract_categories()
             screen.extract_products()
             screen.insert_product(table)
             self.content_ok = True
