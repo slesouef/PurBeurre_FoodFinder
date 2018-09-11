@@ -170,7 +170,7 @@ class Table:
                 single_row = dict(zip(c_list, extract[i]))
                 i += 1
                 result.append(single_row)
-            return
+            return result
         except pymysql.err.ProgrammingError:
             raise
 
