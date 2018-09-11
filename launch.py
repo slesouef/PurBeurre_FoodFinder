@@ -9,22 +9,17 @@ from conf import SCRIPT
 
 
 class Launch:
-    """class to verify the application is in a usable state"""
-
-    def __init__(self):
-        # initiate checks status
-        self.DB_ok = False
-        self.tables_ok = False
-        self.content_ok = False
+    """class to verify the application is in a usable state
+       methods return True if OK"""
 
     def check_db(self):
         # connect to database
         try:
             Database()
-            self.DB_ok = True
+            return True
         # connection error
         except pymysql.err.InternalError:
-            pass
+            return False
 
     def check_tables(self):
         # connect to database
@@ -35,11 +30,11 @@ class Launch:
             try:
                 # create tables
                 db.create_tables(SCRIPT)
-                self.tables_ok = True
+                return True
             except pymysql.err.ProgrammingError:
-                pass
+                return False
         else:
-            self.tables_ok = True
+            return True
 
     def check_content(self):
         # connect to database
@@ -65,8 +60,8 @@ class Launch:
             screen.insert_categories(table)
             screen.extract_products()
             screen.insert_product(table)
-            self.content_ok = True
-        elif select_category != select_product:
+            return True
+        elif not select_product:
             # call API to retrieve data
             call = Call()
             url = call.create_url()
@@ -76,6 +71,6 @@ class Launch:
             screen.extract_categories()
             screen.extract_products()
             screen.insert_product(table)
-            self.content_ok = True
+            return True
         else:
-            self.content_ok = True
+            return True
