@@ -61,11 +61,10 @@ class Launch:
             data = call.api_request(url)
             # data treatment
             screen = Filter(data.data)
-            categories = screen.extract_categories()
-            print(categories)
-            print(len(categories))
-            products = screen.extract_products()
-            print(products)
-            print(len(products))
+            screen.extract_categories()
+            screen.insert_categories(table)
+            screen.extract_products()
+            screen.insert_product(table)
+            self.content_ok = True
         else:
             self.content_ok = True
