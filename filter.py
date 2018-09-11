@@ -5,6 +5,7 @@ import re
 
 from categories import *
 from product import *
+from pymysql.err import ProgrammingError
 
 from conf import PAGESIZE, MIN_SIZE
 
@@ -109,7 +110,7 @@ class Filter:
             # insert in database
             try:
                 table.insert(category)
-            except pymysql.err.ProgrammingError:
+            except ProgrammingError:
                 pass
 
     def insert_product(self, table):
@@ -136,5 +137,5 @@ class Filter:
             # insert in database
             try:
                 table.insert(product)
-            except pymysql.err.ProgrammingError:
+            except ProgrammingError:
                 pass
