@@ -61,21 +61,25 @@ class Table:
         self.connection = database.connection
 
     def insert(self, entry):
-        """modify the content of the database"""
+        """add content in the database"""
         cursor = self.connection.cursor()  # initiate cursor
         # extract information from object data dictionary
         d_values, d_table = entry
         # create insert statement:
         # INSERT INTO table_name (column1, column2, column3, ...)
         # VALUES ('value1', 'value2', 'value3', ...);
-        c_list = [str(x) for x in d_values if x != 'id']
-        v_list = [str(d_values.get(x)) for x in d_values if x != 'id']
+        if d_table == "Products":
+            c_list = [str(x) for x in d_values if x != 'pid']
+            v_list = [str(d_values.get(x)) for x in d_values if x != 'pid']
+        else:
+            c_list = [str(x) for x in d_values if x != 'cid']
+            v_list = [str(d_values.get(x)) for x in d_values if x != 'cid']
         separator = ", "
         columns = separator.join(c_list)
         values = separator.join(v_list)
         # create request string
         insert = "INSERT INTO {} ({}) VALUES ({});".format(d_table, columns,
-                                                               values)
+                                                           values)
         # execute request
         cursor.execute(insert)
         self.connection.commit()
@@ -84,15 +88,20 @@ class Table:
         return r_id
 
     def update(self, entry, **condition):
-        cursor = self.connection.cursor() # initiate cursor
-        # exctract information form entry object
+        """update specified values of entries in database"""
+        cursor = self.connection.cursor()  # initiate cursor
+        # extract information form entry object
         d_values, d_table = entry
         # create update statement
         # UPDATE table_name
         # SET column1 = value1, column2 = value2, ...
         # WHERE condition;
-        v_list = ["{}={}".format(x, d_values.get(x))
-                  for x in d_values if x != 'id']
+        if d_table == "Products":
+            v_list = ["{}={}".format(x, d_values.get(x))
+                      for x in d_values if x != 'pid']
+        else:
+            v_list = ["{}={}".format(x, d_values.get(x))
+                      for x in d_values if x != 'cid']
         separator = ", "
         values = separator.join(v_list)
         # create selector
