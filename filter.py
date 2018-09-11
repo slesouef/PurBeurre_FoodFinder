@@ -109,7 +109,7 @@ class Filter:
             # insert in database
             try:
                 table.insert(category)
-            except:
+            except pymysql.err.ProgrammingError:
                 pass
 
     def insert_product(self, table):
@@ -136,5 +136,5 @@ class Filter:
             # insert in database
             try:
                 table.insert(product)
-            except:
+            except pymysql.err.ProgrammingError:
                 pass
