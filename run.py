@@ -1,32 +1,39 @@
 #! usr/env/bin python3
 # -*- coding:utf-8 -*-
-"""main application file. Contains main loop."""
-from myrequest import *
-from myconnector import *
-from product import *
-from categories import *
-from history import *
-from filter import *
-
-from conf import *
+"""run the application"""
+from launch import *
 
 
-def main_loop():
+def main():
 
-    # connect to database
-    db = Database()
-
-    # check database content
-    check = db.check_database()
-    if not check :
-        # create tables
-        db.create_tables(SCRIPT)
+    launch = Launch()
+    launch.check_db()
+    if launch.DB_ok is True:
+        launch.check_tables()
+        if launch.tables_ok is True:
+            launch.check_content()
+            if launch.content_ok is True:
+                print(
+                    "1 - Quel aliment souhaitez-vous remplacer ?" + '\n' +
+                    "2 - Retrouver mes aliments substitués."
+                    )
+                choice = input("Votre choix:")
+                if choice == '1':
+                    print("categorie list")
+                elif choice == '2':
+                    print("saved list")
+                else:
+                    print("merci de bien vouloir fournir une valeur valide")
+            else:
+                print("no content")
+        else:
+            print("no tables")
     else:
-        print("tables ok")
-    #     print(check)
+        print("The database does not exist. Please check the configuration.")
+
 
     # DB CRUD
-    table = Table(db)
+    # table = Table(db)
     # product = Product("'evian'", "'150ml'", "'evian'", "'eau minerale'",
     #                   "'http://test.off.org'", "'a'", 1, 4)
     # entry = product.create()
@@ -53,36 +60,6 @@ def main_loop():
     # delete = table.delete(entry, searched_pid=1)
     # print(delete)
 
-    # call API to retrieve data
-    call = Call()
-    url = call.create_url()
-    data = call.api_request(url)
-    # data treatment
-    screen = Filter(data.data)
-    screen.extract_categories()
-    screen.insert_categories(table)
-    cat = Category()
-    cat = cat.create()
-    cat_table = table.read(cat)
-    print(cat_table)
-    # print(len(categories))
-    screen.extract_products()
-    screen.insert_product(table)
-    prod = Product()
-    prod = prod.create()
-    prod_table = table.read(prod)
-    print(prod_table)
-
-    # print("1 - Quel aliment souhaitez-vous remplacer ?" + '\n' + "2 - "
-    #                  "Retrouver mes aliments substitués.")
-    # choice = input("Votre choix:")
-    # if choice == '1':
-    #     print("categorie list")
-    # elif choice == '2':
-    #     print("saved list")
-    # else:
-    #     print("merci de bien vouloir fournir une valeur valide")
-
 
 if __name__ == "__main__":
-    main_loop()
+    main()
