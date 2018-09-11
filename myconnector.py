@@ -46,7 +46,10 @@ class Database:
         with open(file, "r") as fd:
             # execute script
             for line in fd:
-                cursor.execute(line)
+                try:
+                    cursor.execute(line)
+                except pymysql.err.ProgrammingError:
+                    raise
         # close file
         fd.close()
         # commit changes
@@ -81,11 +84,14 @@ class Table:
         insert = "INSERT INTO {} ({}) VALUES ({});".format(d_table, columns,
                                                            values)
         # execute request
-        cursor.execute(insert)
-        self.connection.commit()
-        # return id
-        r_id = cursor.lastrowid
-        return r_id
+        try:
+            cursor.execute(insert)
+            self.connection.commit()
+            # return id
+            r_id = cursor.lastrowid
+            return r_id
+        except pymysql.err.ProgrammingError:
+            raise
 
     def update(self, entry, **condition):
         """update specified values of entries in database"""
@@ -117,11 +123,14 @@ class Table:
             # create request string
             update = "UPDATE {} SET {} WHERE {};".format(d_table, values, row)
         # execute request
-        cursor.execute(update)
-        self.connection.commit()
-        # return id
-        r_id = cursor.lastrowid
-        return r_id
+        try:
+            cursor.execute(update)
+            self.connection.commit()
+            # return id
+            r_id = cursor.lastrowid
+            return r_id
+        except pymysql.err.ProgrammingError:
+            raise
 
     def read(self, entry, **condition):
         """read entries in database"""
@@ -148,19 +157,22 @@ class Table:
             # create request string
             select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
         # execute request
-        cursor.execute(select)
-        # retrieve response
-        reply = cursor.fetchall()
-        extract = list(reply)
-        # insert responses in list
-        i = 0
-        result = []
-        while i < len(extract):
-            # create dictionary entry per row returned
-            single_row = dict(zip(c_list, extract[i]))
-            i += 1
-            result.append(single_row)
-        return result
+        try:
+            cursor.execute(select)
+            # retrieve response
+            reply = cursor.fetchall()
+            extract = list(reply)
+            # insert responses in list
+            i = 0
+            result = []
+            while i < len(extract):
+                # create dictionary entry per row returned
+                single_row = dict(zip(c_list, extract[i]))
+                i += 1
+                result.append(single_row)
+            return
+        except pymysql.err.ProgrammingError:
+            raise
 
     def delete(self, entry, **condition):
         """delete entries in database"""
@@ -176,8 +188,11 @@ class Table:
         # create request
         delete = "DELETE FROM {} WHERE {};".format(d_table, row)
         # execute request
-        cursor.execute(delete)
-        self.connection.commit()
-        # return id
-        r_id = cursor.lastrowid
-        return r_id
+        try:
+            cursor.execute(delete)
+            self.connection.commit()
+            # return id
+            r_id = cursor.lastrowid
+            return r_id
+        except pymysql.err.ProgrammingError:
+            raise
