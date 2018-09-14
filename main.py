@@ -4,6 +4,9 @@
 from myconnector import *
 from categories import *
 from product import *
+from history import *
+
+from pymysql.err import IntegrityError
 
 
 class Controller:
@@ -165,7 +168,51 @@ class Controller:
 
     def save_substitution(self, pid, sub_pid):
         """saves the selected product and its substitution in database"""
-        pass
+        # case for previous choice was bad input
+        if not pid and not sub_pid:
+            choice = input(
+                "votre recherche a ete sauvegardee. Voulez vous faire "
+                "une autre recherche (Oui/Non)?")
+            # user wants to do another search
+            if choice.lower() == "oui" or choice.lower() == "o":
+                self.landing()
+            # user does not want to continue searching
+            elif choice == "exit" or choice.lower() == "non" \
+                    or choice.lower() == "n":
+                self.db.connection.close()
+                self.close = 1
+            # display error
+            else:
+                print("merci de bien vouloir fournir une valeur valide")
+                self.save_substitution(None, None)
+        # case from show_substitution
+        else:
+            # instantiate a history object with parameters from
+            # show_substitution
+            history = History(pid, sub_pid)
+            history = history.create()
+            # try an insert but catch the case where the save has already
+            # been done
+            try:
+                self.table.insert(history)
+                choice = input("votre recherche a ete sauvegardee. Voulez-vous "
+                               "faire une autre recherche (Oui/Non)?")
+            except IntegrityError:
+                choice = input("Cette recherhe a deja ete sauvegardee. "
+                               "Voulez-vous faire une autre recherche "
+                               "(Oui/Non)?")
+            # user wants to do another search
+            if choice.lower() == "oui" or choice.lower() == "o":
+                self.landing()
+            # user does not want to continue searching
+            elif choice == "exit" or choice.lower() == "non" \
+                    or choice.lower() == "n":
+                self.db.connection.close()
+                self.close = 1
+            # display error
+            else:
+                print("merci de bien vouloir fournir une valeur valide")
+                self.save_substitution(None, None)
 
     def show_history(self):
         """displays the content of the history table"""
