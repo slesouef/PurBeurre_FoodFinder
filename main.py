@@ -11,6 +11,8 @@ class Controller:
     def __init__(self):
         # open database connection
         self.db = Database()
+        # initiate ORM
+        self.table = Table(self.db)
         # setup navigation
         self.close = 0
 
@@ -35,7 +37,6 @@ class Controller:
            one categories can be selected."""
         print("Laquelle de ces categories vous interesse?")
         # select all categories from database
-        table = Table(db)
         category = Category()
         category = category.create()
         read = table.read(category)
