@@ -56,12 +56,10 @@ class Controller:
             row += 1
         # wait for input
         choice = input("Votre choix:")
-        # act on input
+        # select category from input
         if choice in lookup:
-            cid = None
-            for x in read:
-                if x["name"] == lookup[choice]:
-                    cid = x["cid"]
+            cid = [x["cid"] for x in read if x["name"] == lookup[choice]]
+            cid = cid[0]
             self.show_products(cid)
         # close app
         elif choice == "exit":
