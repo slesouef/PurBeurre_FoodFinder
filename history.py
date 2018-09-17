@@ -7,7 +7,7 @@ from conf import *
 
 class History:
 
-    def __init__(self, pid, sub_pid):
+    def __init__(self, pid=None, sub_pid=None):
         # data format
         self.db_format = {
             "pid": "pid",
