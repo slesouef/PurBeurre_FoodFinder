@@ -216,4 +216,32 @@ class Controller:
 
     def show_history(self):
         """displays the content of the history table"""
-        print("history")
+        # instanciate a history object
+        history = History()
+        history = history.create()
+        read = self.table.read(history)
+        pid = read[0]["pid"]
+        sub_pid = read[0]["sub_pid"]
+        date = read[0]["date"]
+        # retrieve product information
+        product = Product()
+        product = product.create()
+        read = self.table.read(product, pid=pid)
+        # read database response
+        name = read[0]["name"]
+        quantity = read[0]["quantity"]
+        rating = read[0]["rating"]
+        prod = "nom du produit: " + name + ", " + \
+               "quantite du produit: " + quantity + ", " + \
+               "rating: " + rating
+        # retrieve substitution information
+        read = self.table.read(product, pid=sub_pid)
+        # read database response
+        sub_name = read[0]["name"]
+        sub_quantity = read[0]["quantity"]
+        sub_rating = read[0]["rating"]
+        sub = "nom du produit: " + sub_name + ", " + \
+              "quantite du produit: " + sub_quantity + ", " + \
+              "rating: " + sub_rating
+        display = "Sauvegarde du " + str(date) + ":\n" + prod + "\n" + sub
+        print(display)
