@@ -115,39 +115,29 @@ class Controller:
         # retrieve product information
         product = Product()
         product = product.create()
-        read = self.table.read(product, pid=pid)
-        # read database response
-        name = read[0]["name"]
-        brand = read[0]["brand"]
-        quantity = read[0]["quantity"]
-        description = read[0]["description"]
-        url = read[0]["url"]
-        rating = read[0]["rating"]
-        prod = "nom du produit: " + name + "\n" +\
-               "marque du produit: " + brand + "\n" +\
-               "quantite du produit: " + quantity + "\n" +\
-               "description: " + description + "\n" +\
-               "url: " + url + "\n" +\
-               "rating: " + rating
+        prod_read = self.table.read(product, pid=pid)
+        read = prod_read[0]
+        # read database
+        prod = "nom du produit: " + read["name"] + "\n" + \
+               "marque du produit: " + read["brand"] + "\n" + \
+               "quantite du produit: " + read["quantity"] + "\n" + \
+               "description: " + read["description"] + "\n" + \
+               "url: " + read["url"] + "\n" + \
+               "rating: " + read["rating"]
         print(prod)
         read = self.table.read(product, cid=cid)
         rating_list = {x["pid"]: x["rating"] for x in read}
         sub_pid = sorted(rating_list, key=rating_list.get)
         sub_pid = sub_pid[0]
-        read = self.table.read(product, pid=sub_pid)
+        sub_read = self.table.read(product, pid=sub_pid)
         # read database response
-        sub_name = read[0]["name"]
-        sub_brand = read[0]["brand"]
-        sub_quantity = read[0]["quantity"]
-        sub_description = read[0]["description"]
-        sub_url = read[0]["url"]
-        sub_rating = read[0]["rating"]
-        sub = "nom du produit: " + sub_name + "\n" + \
-               "marque du produit: " + sub_brand + "\n" + \
-               "quantite du produit: " + sub_quantity + "\n" + \
-               "description: " + sub_description + "\n" + \
-               "url: " + sub_url + "\n" + \
-               "rating: " + sub_rating
+        read = sub_read[0]
+        sub = "nom du produit: " + read["name"] + "\n" + \
+              "marque du produit: " + read["brand"] + "\n" + \
+              "quantite du produit: " + read["quantity"] + "\n" + \
+              "description: " + read["description"] + "\n" + \
+              "url: " + read["url"] + "\n" + \
+              "rating: " + read["rating"]
         print(sub)
         # propose to save this search
         choice = input("voulez vous sauvegarder cette recherche (Oui/Non)?")
