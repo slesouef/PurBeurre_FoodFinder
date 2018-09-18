@@ -41,12 +41,8 @@ class Filter:
                 self.categories.append(clean)
         # remove keys starting with 'xx:'
         pattern = re.compile('^..:')
-        # print(self.categories)
-        # print(len(self.categories))
         for i in self.categories:
-            # print(i)
             if pattern.match(i):
-                # print(i)
                 self.categories.remove(i)
         # return list of extracted categories
         return self.categories
@@ -134,17 +130,14 @@ class Filter:
             cat = cat.create()
             arg = '"' + category + '"'
             cid = table.read(cat, name=arg)
-            try:
-                cid = cid[0]
-                cid = cid["cid"]
-                # create product object
-                product = Product(name, quantity, brand, description, url,
+            cid = cid[0]
+            cid = cid["cid"]
+            # create product object
+            product = Product(name, quantity, brand, description, url,
                               rating, cid)
-                product = product.create()
-                # insert in database
-                try:
-                    table.insert(product)
-                except ProgrammingError:
-                    raise
-            except IndexError:
+            product = product.create()
+            # insert in database
+            try:
+                table.insert(product)
+            except ProgrammingError:
                 raise
