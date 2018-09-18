@@ -34,6 +34,9 @@ class Database:
     def check_database(self):
         """verify the database has been created"""
         cursor = self.connection.cursor()  # initiate cursor
+        # TODO: add check of charater set and run "ALTER DATABASE DBNAME
+        # CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" if necessary
+        #
         # check if table exist
         cursor.execute('SHOW TABLES')
         result = cursor.fetchall()
