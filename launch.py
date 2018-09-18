@@ -7,6 +7,8 @@ from filter import *
 
 from conf import SCRIPT
 
+# TODO: add connection close in all methods where it is necessary
+
 
 class Launch:
     """class to verify the application is in a usable state
