@@ -36,7 +36,9 @@ class Filter:
         # extract from dictionary categories with MIN_SIZE < x products
         for name, value in count.items():
             if value >= MIN_SIZE:
-                self.categories.append(name.strip())
+                name = name.strip()
+                clean = name.replace("'", r"\'")
+                self.categories.append(clean)
         # remove keys starting with 'xx:'
         pattern = re.compile('^..:')
         # print(self.categories)
@@ -64,28 +66,32 @@ class Filter:
                     # initialise product entry
                     product = {}
                     # add name
-                    name = self.data["products"][i]["product_name_fr"]
-                    name = "'" + name + "'"
+                    raw_name = self.data["products"][i]["product_name_fr"]
+                    clean_name = raw_name.replace("'", r"\'")
+                    name = "'" + clean_name + "'"
                     product["name"] = name
                     # add quantity
-                    quantity = self.data["products"][i]["quantity"]
-                    quantity = "'" + quantity + "'"
+                    raw_quantity = self.data["products"][i]["quantity"]
+                    quantity = "'" + raw_quantity + "'"
                     product["quantity"] = quantity
                     # add brand
-                    brand = self.data["products"][i]["brands"]
-                    brand = "'" + brand + "'"
+                    raw_brand = self.data["products"][i]["brands"]
+                    clean_brand = raw_brand.replace("'", r"\'")
+                    brand = "'" + clean_brand + "'"
                     product["brand"] = brand
                     # add description
-                    description = self.data["products"][i]["generic_name_fr"]
-                    description = "'" + description + "'"
+                    raw_description = self.data["products"][i][
+                        "generic_name_fr"]
+                    clean_description = raw_description.replace("'", r"\'")
+                    description = "'" + clean_description + "'"
                     product["description"] = description
                     # add url
-                    url = self.data["products"][i]["url"]
-                    url = "'" + url + "'"
+                    raw_url = self.data["products"][i]["url"]
+                    url = "'" + raw_url + "'"
                     product["url"] = url
                     # add rating
-                    rating = self.data["products"][i]["nutrition_grade_fr"]
-                    rating = "'" + rating + "'"
+                    raw_rating = self.data["products"][i]["nutrition_grade_fr"]
+                    rating = "'" + raw_rating + "'"
                     product["rating"] = rating
                     # add category
                     product["category"] = b
@@ -111,7 +117,7 @@ class Filter:
             try:
                 table.insert(category)
             except ProgrammingError:
-                pass
+                raise
 
     def insert_product(self, table):
         for i in self.products:
@@ -128,14 +134,17 @@ class Filter:
             cat = cat.create()
             arg = '"' + category + '"'
             cid = table.read(cat, name=arg)
-            cid = cid[0]
-            cid = cid["cid"]
-            # create product object
-            product = Product(name, quantity, brand, description, url,
-                              rating, cid)
-            product = product.create()
-            # insert in database
             try:
-                table.insert(product)
-            except ProgrammingError:
-                pass
+                cid = cid[0]
+                cid = cid["cid"]
+                # create product object
+                product = Product(name, quantity, brand, description, url,
+                              rating, cid)
+                product = product.create()
+                # insert in database
+                try:
+                    table.insert(product)
+                except ProgrammingError:
+                    raise
+            except IndexError:
+                raise
