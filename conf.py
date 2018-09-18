@@ -11,7 +11,7 @@ DBNAME = 'demo'
 # API call configutation
 URL = 'https://fr.openfoodfacts.org/cgi/search.pl?action=process&sort_by' \
       '=unique_scans_n&json=1'
-PAGESIZE = 50
+PAGESIZE = 250
 
 # MySQL database creation file location
 SCRIPT = "data/creation_script.sql"
