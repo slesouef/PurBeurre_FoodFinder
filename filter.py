@@ -34,16 +34,17 @@ class Filter:
                 count[b] += 1
             i += 1
         # extract from dictionary categories with MIN_SIZE < x products
+        cat_list = []
         for name, value in count.items():
             if value >= MIN_SIZE:
                 name = name.strip()
                 clean = name.replace("'", r"\'")
-                self.categories.append(clean)
+                cat_list.append(clean)
         # remove keys starting with 'xx:'
         pattern = re.compile('^..:')
-        for i in self.categories:
-            if pattern.match(i):
-                self.categories.remove(i)
+        for i in cat_list:
+            if not pattern.match(i):
+                self.categories.append(i)
         # return list of extracted categories
         return self.categories
 
