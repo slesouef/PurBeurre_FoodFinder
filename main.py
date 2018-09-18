@@ -210,28 +210,25 @@ class Controller:
         history = History()
         history = history.create()
         read = self.table.read(history)
-        pid = read[0]["pid"]
-        sub_pid = read[0]["sub_pid"]
-        date = read[0]["date"]
-        # retrieve product information
-        product = Product()
-        product = product.create()
-        read = self.table.read(product, pid=pid)
-        # read database response
-        name = read[0]["name"]
-        quantity = read[0]["quantity"]
-        rating = read[0]["rating"]
-        prod = "nom du produit: " + name + ", " + \
-               "quantite du produit: " + quantity + ", " + \
-               "rating: " + rating
-        # retrieve substitution information
-        read = self.table.read(product, pid=sub_pid)
-        # read database response
-        sub_name = read[0]["name"]
-        sub_quantity = read[0]["quantity"]
-        sub_rating = read[0]["rating"]
-        sub = "nom du produit: " + sub_name + ", " + \
-              "quantite du produit: " + sub_quantity + ", " + \
-              "rating: " + sub_rating
-        display = "Sauvegarde du " + str(date) + ":\n" + prod + "\n" + sub
-        print(display)
+        for i in read:
+            pid = i["pid"]
+            sub_pid = i["sub_pid"]
+            date = i["date"]
+            # retrieve product information
+            product = Product()
+            product = product.create()
+            table_read = self.table.read(product, pid=pid)
+            prod_read = table_read[0]
+            # read database response
+            prod = "nom du produit: " + prod_read["name"] + ", " + \
+                   "quantite du produit: " + prod_read["quantity"] + ", " + \
+                   "rating: " + prod_read["rating"]
+            # retrieve substitution information
+            table_read = self.table.read(product, pid=sub_pid)
+            sub_read = table_read[0]
+            # read database response
+            sub = "nom du produit: " + sub_read["name"] + ", " + \
+                  "quantite du produit: " + sub_read["quantity"] + ", " + \
+                  "rating: " + sub_read["rating"]
+            display = "Sauvegarde du " + str(date) + ":\n" + prod + "\n" + sub
+            print(display)
