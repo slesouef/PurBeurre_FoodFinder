@@ -142,3 +142,23 @@ class Filter:
                 table.insert(product)
             except ProgrammingError:
                 raise
+
+    def clean_categories(self, table):
+        """remove categories with no products"""
+        # get list of categories in database
+        cat = Category()
+        cat = cat.create()
+        cat_list = table.read(cat)
+        # instantiate products table
+        prod = Product()
+        prod = prod.create()
+        for i in cat_list:
+            # check number of products for a category
+            cid = i["cid"]
+            check = table.read(prod, cid=cid)
+            # delete category if empty
+            if not check:
+                table.delete(cat, cid=cid)
+            # otherwise do nothing
+            else:
+                pass

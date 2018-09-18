@@ -60,6 +60,7 @@ class Launch:
             screen.insert_categories(table)
             screen.extract_products()
             screen.insert_product(table)
+            screen.clean_categories(table)
             return True
         elif not select_product:
             # call API to retrieve data
@@ -71,6 +72,7 @@ class Launch:
             screen.extract_categories()
             screen.extract_products()
             screen.insert_product(table)
+            screen.clean_categories(table)
             return True
         else:
             return True
