@@ -26,6 +26,7 @@ class Product:
         self.table = PRODUCT
 
     def create(self):
+        """return a tuple containing value dictionary and table name"""
         values = self.db_format
         values["name"] = self.name
         values["quantity"] = self.quantity
@@ -39,6 +40,7 @@ class Product:
         return values, table_name
 
     def update(self, entry, pid):
+        """update object inserted in database with id"""
         data, table = entry
         data["pid"] = pid
         return entry

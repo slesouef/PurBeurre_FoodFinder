@@ -10,9 +10,11 @@ from conf import SCRIPT
 
 class Launch:
     """class to verify the application is in a usable state
-       methods return True if OK"""
+       methods return True if OK
+       """
 
     def check_db(self):
+        """check database connection"""
         # connect to database
         try:
             Database()
@@ -22,6 +24,7 @@ class Launch:
             return False
 
     def check_tables(self):
+        """check tables exist and create them otherwise"""
         # connect to database
         db = Database()
         # check tables
@@ -39,6 +42,7 @@ class Launch:
             return True
 
     def check_content(self):
+        """check tables are populated and populate them if necessary"""
         # connect to database
         db = Database()
         # initiate orm

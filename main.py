@@ -43,7 +43,8 @@ class Controller:
 
     def show_categories(self):
         """displays a list of all categories in database.
-           one categories can be selected."""
+           one category can be selected.
+           """
         print("Voici la liste des catégories disponible." + "\n" +
               "Choisissez le numéro de la catégorie qui vous intéresse.")
         # select all categories from database
@@ -57,11 +58,9 @@ class Controller:
             # create display string
             name = i["name"]
             cat = str(row) + " - " + name
-            # display category
             print(cat)
             # update lookup table
             lookup[str(row)] = name
-            # update row id
             row += 1
         # wait for input
         choice = input("Votre choix:")
@@ -80,12 +79,13 @@ class Controller:
             self.show_categories()
 
     def show_products(self, cid):
-        """displays a list of all the products within a categorie.
-           one product can be selected."""
-        # select all product for the category selected
+        """displays a list of all the products within a category.
+           one product can be selected.
+           """
         print("Voici la liste des produits disponible dans cette catégorie."
               + "\n" +
               "Merci de choisir le numéro du produit qui vous intéresse.")
+        # select all product for the category selected
         product = Product()
         product = product.create()
         read = self.table.read(product, cid=cid)
@@ -97,13 +97,11 @@ class Controller:
             name = i["name"]
             quantity = i["quantity"]
             prod = str(row) + " - " + name + ", " + quantity
-            # display category
             print(prod)
             # update lookup table
             lookup[str(row)] = i["pid"]
-            # update row id
             row += 1
-            # wait for input
+        # wait for input
         choice = input("Votre choix:")
         # identify product from input
         if choice in lookup:
@@ -120,14 +118,16 @@ class Controller:
             self.show_products(cid)
 
     def show_substitution(self, cid, pid):
-        """displays the selected product and a substitution (lower rating)"""
-        # retrieve product information
+        """displays the selected product and a substitution
+           (higher or equal rating)
+           """
         print("Voici les informations du produit que vous avez choisi:")
+        # retrieve product information
         product = Product()
         product = product.create()
         prod_read = self.table.read(product, pid=pid)
         read = prod_read[0]
-        # read database
+        # read database info
         prod = "Nom du produit: " + read["name"] + "\n" + \
                "Marque du produit: " + read["brand"] + "\n" + \
                "Quantité du produit: " + read["quantity"] + "\n" + \
@@ -136,12 +136,13 @@ class Controller:
                "Note nutri-score: " + read["rating"]
         print(prod + "\n" + "Voici un autre produit ayant une note supérieure "
                             "ou égale au produit que vous avez sélectionnez:")
+        # find other product in the same category
         read = self.table.read(product, cid=cid)
         rating_list = {x["pid"]: x["rating"] for x in read}
+        # order by rating to get substitute w/ better or equal rating
         sub_pid = sorted(rating_list, key=rating_list.get)
-        sub_pid = sub_pid[0]
+        sub_pid = sub_pid[0]  # product with the best rating for category
         sub_read = self.table.read(product, pid=sub_pid)
-        # read database response
         read = sub_read[0]
         sub = "Nom du produit: " + read["name"] + "\n" + \
               "Marque du produit: " + read["brand"] + "\n" + \
@@ -168,7 +169,9 @@ class Controller:
             self.show_substitution(cid, pid)
 
     def save_substitution(self, pid, sub_pid):
-        """saves the selected product and its substitution in database"""
+        """saves the selected product and its substitution in
+           database
+           """
         # case for previous choice was bad input
         if not pid and not sub_pid:
             choice = input(
@@ -218,10 +221,11 @@ class Controller:
 
     def show_history(self):
         """displays the content of the history table"""
-        # instanciate a history object
+        # read history table
         history = History()
         history = history.create()
         read = self.table.read(history)
+        # display all results
         for i in read:
             pid = i["pid"]
             sub_pid = i["sub_pid"]

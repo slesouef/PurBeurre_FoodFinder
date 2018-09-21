@@ -20,6 +20,7 @@ class History:
         self.table = HISTORY
 
     def create(self):
+        """create tuple with value dictionary and table name"""
         values = self.db_format
         values["pid"] = self.pid
         values["sub_pid"] = self.sub_pid

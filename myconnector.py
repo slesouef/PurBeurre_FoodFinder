@@ -7,7 +7,7 @@ from conf import *
 
 
 class Database:
-    """Connect and create database"""
+    """Connect to or populate database"""
 
     def __init__(self):
         # initiate user access
@@ -32,23 +32,22 @@ class Database:
             raise
 
     def check_database(self):
-        """verify the database has been created"""
+        """verify the tables have been created"""
         cursor = self.connection.cursor()  # initiate cursor
         # check if table exist
-        cursor.execute('SHOW TABLES')
+        cursor.execute("SHOW TABLES")
         result = cursor.fetchall()
         return result
 
     def create_tables(self, file):
-        """create database from script"""
+        """create tables from script"""
         cursor = self.connection.cursor()
         # Set database character set to utf-8
         request = "ALTER DATABASE " + DBNAME + " CHARACTER SET utf8mb4 " \
                                                "COLLATE utf8mb4_unicode_ci;"
         cursor.execute(request)
-        # open script
+        # execute script
         with open(file, "r") as fd:
-            # execute script
             for line in fd:
                 try:
                     cursor.execute(line)
@@ -76,11 +75,11 @@ class Table:
         # INSERT INTO table_name (column1, column2, column3, ...)
         # VALUES ('value1', 'value2', 'value3', ...);
         if d_table == "Products":
-            c_list = [str(x) for x in d_values if x != 'pid']
-            v_list = [str(d_values.get(x)) for x in d_values if x != 'pid']
+            c_list = [str(x) for x in d_values if x != "pid"]
+            v_list = [str(d_values.get(x)) for x in d_values if x != "pid"]
         else:
-            c_list = [str(x) for x in d_values if x != 'cid']
-            v_list = [str(d_values.get(x)) for x in d_values if x != 'cid']
+            c_list = [str(x) for x in d_values if x != "cid"]
+            v_list = [str(d_values.get(x)) for x in d_values if x != "cid"]
         separator = ", "
         columns = separator.join(c_list)
         values = separator.join(v_list)
@@ -99,8 +98,7 @@ class Table:
 
     def update(self, entry, **condition):
         """update specified values of entries in database"""
-        cursor = self.connection.cursor()  # initiate cursor
-        # extract information form entry object
+        cursor = self.connection.cursor()
         d_values, d_table = entry
         # create update statement
         # UPDATE table_name
@@ -138,7 +136,7 @@ class Table:
 
     def read(self, entry, **condition):
         """read entries in database"""
-        cursor = self.connection.cursor()  # initiate cursor
+        cursor = self.connection.cursor()
         # create select statement:
         # SELECT column1, column2, ...
         # FROM table_name
@@ -148,8 +146,6 @@ class Table:
         c_list = [str(x) for x in d_values]
         separator = ", "
         column = separator.join(c_list)
-        # create condition string
-        # check if conditions exist
         if not condition:
             # no condition, create select request with no where
             select = "SELECT {} FROM {};".format(column, d_table)
@@ -158,15 +154,12 @@ class Table:
             selector = ["{}={}".format(x, condition.get(x)) for x in condition]
             concat = ' and '
             row = concat.join(selector)
-            # create request string
             select = "SELECT {} FROM {} WHERE {};".format(column, d_table, row)
-        # execute request
         try:
             cursor.execute(select)
             # retrieve response
             reply = cursor.fetchall()
             extract = list(reply)
-            # insert responses in list
             i = 0
             result = []
             while i < len(extract):
@@ -180,7 +173,7 @@ class Table:
 
     def delete(self, entry, **condition):
         """delete entries in database"""
-        cursor = self.connection.cursor()  # initiate cursor
+        cursor = self.connection.cursor()
         # create delete statement
         # DELETE FROM table_name
         # WHERE condition;
@@ -191,7 +184,6 @@ class Table:
         row = concat.join(selector)
         # create request
         delete = "DELETE FROM {} WHERE {};".format(d_table, row)
-        # execute request
         try:
             cursor.execute(delete)
             self.connection.commit()

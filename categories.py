@@ -17,6 +17,7 @@ class Category:
         self.table = CATEGORY
 
     def create(self):
+        """return a tuple containing value dictionary and table name"""
         values = self.db_format
         values["name"] = self.name
         values["cid"] = self.cid
@@ -24,6 +25,7 @@ class Category:
         return values, table_name
 
     def update(self, entry, cid):
+        """update object inserted in database with id"""
         data, table = entry
         data["cid"] = cid
         return entry

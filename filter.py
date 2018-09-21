@@ -1,6 +1,8 @@
 #! usr/bin/env python3
 # -*- coding:utf-8 -*-
-"""filtering of data from request in order to extract categories and products"""
+"""filtering of data from request in order to extract categories and
+   products to be inserted in database
+   """
 import re
 
 from categories import *
@@ -20,12 +22,12 @@ class Filter:
         self.products = []
 
     def extract_categories(self):
-        """extract categories from response data and insert them in DB"""
+        """extract categories from response data"""
         # parse response to extract categories w/count into a dictionary
         i = 0
         count = {}
         while i < PAGESIZE:
-            # add catgories in a dictionary to count how any elements per
+            # create count dictionary
             a = self.data["products"][i]["categories"].split(",")
             b = a[-1]
             if b not in count:
@@ -38,9 +40,9 @@ class Filter:
         for name, value in count.items():
             if value >= MIN_SIZE:
                 name = name.strip()
-                clean = name.replace("'", r"\'")
+                clean = name.replace("'", r"\'")  # escape apostrophe for sql
                 cat_list.append(clean)
-        # remove keys starting with 'xx:'
+        # remove keys starting with 'en:' or 'fr:'
         pattern = re.compile('^..:')
         for i in cat_list:
             if not pattern.match(i):
@@ -49,7 +51,7 @@ class Filter:
         return self.categories
 
     def extract_products(self):
-        """extract products from response data and insert them in DB"""
+        """extract products from response data"""
         # parse response to extract products for each category
         i = 0
         while i < PAGESIZE:
@@ -58,7 +60,6 @@ class Filter:
             b = a[-1]
             # check category is in category list
             if b in set(self.categories):
-                # if a product element missing, disregard entry
                 try:
                     # initialise product entry
                     product = {}
@@ -94,6 +95,7 @@ class Filter:
                     product["category"] = b
                     # append product dictionary element to products list
                     self.products.append(product)
+                # if a product element missing, disregard entry
                 except KeyError:
                     pass
                 finally:
@@ -104,6 +106,7 @@ class Filter:
         return self.products
 
     def insert_categories(self, table):
+        """insert categories in database"""
         for i in self.categories:
             # extract data
             name = "'" + str(i) + "'"
@@ -117,6 +120,7 @@ class Filter:
                 raise
 
     def insert_product(self, table):
+        """insert products in database"""
         for i in self.products:
             # extract data
             name = i["name"]
@@ -159,6 +163,5 @@ class Filter:
             # delete category if empty
             if not check:
                 table.delete(cat, cid=cid)
-            # otherwise do nothing
             else:
                 pass
