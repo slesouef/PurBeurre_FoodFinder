@@ -7,8 +7,6 @@ from filter import *
 
 from conf import SCRIPT
 
-# TODO: add connection close in all methods where it is necessary
-
 
 class Launch:
     """class to verify the application is in a usable state
@@ -32,10 +30,12 @@ class Launch:
             try:
                 # create tables
                 db.create_tables(SCRIPT)
+                db.connection.close()
                 return True
             except pymysql.err.ProgrammingError:
                 return False
         else:
+            db.connection.close()
             return True
 
     def check_content(self):
@@ -63,6 +63,7 @@ class Launch:
             screen.extract_products()
             screen.insert_product(table)
             screen.clean_categories(table)
+            db.connection.close()
             return True
         elif not select_product:
             # call API to retrieve data
@@ -75,6 +76,8 @@ class Launch:
             screen.extract_products()
             screen.insert_product(table)
             screen.clean_categories(table)
+            db.connection.close()
             return True
         else:
+            db.connection.close()
             return True
