@@ -34,9 +34,6 @@ class Database:
     def check_database(self):
         """verify the database has been created"""
         cursor = self.connection.cursor()  # initiate cursor
-        # TODO: add check of charater set and run "ALTER DATABASE DBNAME
-        # CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" if necessary
-        #
         # check if table exist
         cursor.execute('SHOW TABLES')
         result = cursor.fetchall()
@@ -45,6 +42,10 @@ class Database:
     def create_tables(self, file):
         """create database from script"""
         cursor = self.connection.cursor()
+        # Set database character set to utf-8
+        request = "ALTER DATABASE " + DBNAME + " CHARACTER SET utf8mb4 " \
+                                               "COLLATE utf8mb4_unicode_ci;"
+        cursor.execute(request)
         # open script
         with open(file, "r") as fd:
             # execute script
