@@ -23,8 +23,13 @@ class Controller:
     def landing(self):
         """display application landing page"""
         print(
-            "1 - Trouver un substitut pour un aliment" + '\n' +
-            "2 - Retrouver mes aliments substitués.")
+            "Bienvenue dans l'application FoodFinder." + "\n" +
+            "Merci de sélectionner le numéro de l'action que vous souhaitez "
+            "accomplir:" + "\n" +
+            "1 - Trouver un substitut pour un aliment" + "\n" +
+            "2 - Retrouver mes aliments substitués" + "\n" +
+            "Vous pouvez quitter l’application à tout moment en écrivant exit "
+            "dans le champ de sélection.")
         choice = input("Votre choix:")
         if choice == "1":
             self.show_categories()
@@ -34,12 +39,13 @@ class Controller:
             self.db.connection.close()
             self.close = 1
         else:
-            print("merci de bien vouloir fournir une valeur valide")
+            print("Merci de bien vouloir fournir une valeur valide")
 
     def show_categories(self):
         """displays a list of all categories in database.
            one categories can be selected."""
-        print("Laquelle de ces categories vous interesse?")
+        print("Voici la liste des catégories disponible." + "\n" +
+              "Choisissez le numéro de la catégorie qui vous intéresse.")
         # select all categories from database
         category = Category()
         category = category.create()
@@ -70,13 +76,16 @@ class Controller:
             self.close = 1
         # display error
         else:
-            print("merci de bien vouloir fournir une valeur valide")
+            print("Merci de bien vouloir fournir une valeur valide")
             self.show_categories()
 
     def show_products(self, cid):
         """displays a list of all the products within a categorie.
            one product can be selected."""
         # select all product for the category selected
+        print("Voici la liste des produits disponible dans cette catégorie."
+              + "\n" +
+              "Merci de choisir le numéro du produit qui vous intéresse.")
         product = Product()
         product = product.create()
         read = self.table.read(product, cid=cid)
@@ -107,24 +116,26 @@ class Controller:
             self.close = 1
         # display error
         else:
-            print("merci de bien vouloir fournir une valeur valide")
+            print("Merci de bien vouloir fournir une valeur valide")
             self.show_products(cid)
 
     def show_substitution(self, cid, pid):
         """displays the selected product and a substitution (lower rating)"""
         # retrieve product information
+        print("Voici les informations du produit que vous avez choisi:")
         product = Product()
         product = product.create()
         prod_read = self.table.read(product, pid=pid)
         read = prod_read[0]
         # read database
-        prod = "nom du produit: " + read["name"] + "\n" + \
-               "marque du produit: " + read["brand"] + "\n" + \
-               "quantite du produit: " + read["quantity"] + "\n" + \
-               "description: " + read["description"] + "\n" + \
+        prod = "Nom du produit: " + read["name"] + "\n" + \
+               "Marque du produit: " + read["brand"] + "\n" + \
+               "Quantité du produit: " + read["quantity"] + "\n" + \
+               "Description: " + read["description"] + "\n" + \
                "url: " + read["url"] + "\n" + \
-               "rating: " + read["rating"]
-        print(prod)
+               "Note nutri-score: " + read["rating"]
+        print(prod + "\n" + "Voici un autre produit ayant une note supérieure "
+                            "ou égale au produit que vous avez sélectionnez:")
         read = self.table.read(product, cid=cid)
         rating_list = {x["pid"]: x["rating"] for x in read}
         sub_pid = sorted(rating_list, key=rating_list.get)
@@ -132,15 +143,15 @@ class Controller:
         sub_read = self.table.read(product, pid=sub_pid)
         # read database response
         read = sub_read[0]
-        sub = "nom du produit: " + read["name"] + "\n" + \
-              "marque du produit: " + read["brand"] + "\n" + \
-              "quantite du produit: " + read["quantity"] + "\n" + \
-              "description: " + read["description"] + "\n" + \
+        sub = "Nom du produit: " + read["name"] + "\n" + \
+              "Marque du produit: " + read["brand"] + "\n" + \
+              "Quantité du produit: " + read["quantity"] + "\n" + \
+              "Description: " + read["description"] + "\n" + \
               "url: " + read["url"] + "\n" + \
-              "rating: " + read["rating"]
+              "Note nutri-score: " + read["rating"]
         print(sub)
         # propose to save this search
-        choice = input("voulez vous sauvegarder cette recherche (Oui/Non)?")
+        choice = input("Voulez vous sauvegarder cette recherche (Oui/Non)?")
         # user wants to save this search
         if choice.lower() == "oui" or choice.lower() == "o":
             self.save_substitution(pid, sub_pid)
@@ -153,7 +164,7 @@ class Controller:
             self.close = 1
         # display error
         else:
-            print("merci de bien vouloir fournir une valeur valide")
+            print("Merci de bien vouloir fournir une valeur valide")
             self.show_substitution(cid, pid)
 
     def save_substitution(self, pid, sub_pid):
@@ -161,8 +172,8 @@ class Controller:
         # case for previous choice was bad input
         if not pid and not sub_pid:
             choice = input(
-                "votre recherche a ete sauvegardee. Voulez vous faire "
-                "une autre recherche (Oui/Non)?")
+                "Votre recherche a été sauvegardée. "
+                "Voulez vous faire une autre recherche (Oui/Non)?")
             # user wants to do another search
             if choice.lower() == "oui" or choice.lower() == "o":
                 self.landing()
@@ -173,7 +184,7 @@ class Controller:
                 self.close = 1
             # display error
             else:
-                print("merci de bien vouloir fournir une valeur valide")
+                print("Merci de bien vouloir fournir une valeur valide")
                 self.save_substitution(None, None)
         # case from show_substitution
         else:
@@ -185,10 +196,11 @@ class Controller:
             # been done
             try:
                 self.table.insert(history)
-                choice = input("votre recherche a ete sauvegardee. Voulez-vous "
-                               "faire une autre recherche (Oui/Non)?")
+                choice = input("Votre recherche a été sauvegardée. "
+                               "Voulez vous faire une autre recherche "
+                               "(Oui/Non)?")
             except IntegrityError:
-                choice = input("Cette recherhe a deja ete sauvegardee. "
+                choice = input("Cette recherche a déjà été sauvegardée. "
                                "Voulez-vous faire une autre recherche "
                                "(Oui/Non)?")
             # user wants to do another search
@@ -201,7 +213,7 @@ class Controller:
                 self.close = 1
             # display error
             else:
-                print("merci de bien vouloir fournir une valeur valide")
+                print("Merci de bien vouloir fournir une valeur valide")
                 self.save_substitution(None, None)
 
     def show_history(self):
@@ -220,15 +232,15 @@ class Controller:
             table_read = self.table.read(product, pid=pid)
             prod_read = table_read[0]
             # read database response
-            prod = "nom du produit: " + prod_read["name"] + ", " + \
-                   "quantite du produit: " + prod_read["quantity"] + ", " + \
-                   "rating: " + prod_read["rating"]
+            prod = "Nom du produit: " + prod_read["name"] + ", " + \
+                   "Quantité du produit: " + prod_read["quantity"] + ", " + \
+                   "Note nutri-score: " + prod_read["rating"]
             # retrieve substitution information
             table_read = self.table.read(product, pid=sub_pid)
             sub_read = table_read[0]
             # read database response
-            sub = "nom du produit: " + sub_read["name"] + ", " + \
-                  "quantite du produit: " + sub_read["quantity"] + ", " + \
-                  "rating: " + sub_read["rating"]
+            sub = "Nom du produit: " + sub_read["name"] + ", " + \
+                  "Quantité du produit: " + sub_read["quantity"] + ", " + \
+                  "Note Nutri-score: " + sub_read["rating"]
             display = "Sauvegarde du " + str(date) + ":\n" + prod + "\n" + sub
             print(display)
