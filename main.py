@@ -22,15 +22,15 @@ class Controller:
 
     def landing(self):
         """display application landing page"""
-        print(
-            "Bienvenue dans l'application FoodFinder." + "\n" +
-            "Merci de sélectionner le numéro de l'action que vous souhaitez "
-            "accomplir:" + "\n" +
-            "1 - Trouver un substitut pour un aliment" + "\n" +
-            "2 - Retrouver mes aliments substitués" + "\n" +
-            "Vous pouvez quitter l’application à tout moment en écrivant exit "
-            "dans le champ de sélection.")
-        choice = input("Votre choix:")
+        print("\n" +
+              "Bienvenue dans l'application FoodFinder." + "\n" +
+              "Merci de sélectionner le numéro de l'action que vous souhaitez "
+              "accomplir:" + "\n\n" +
+              "1 - Trouver un substitut pour un aliment" + "\n" +
+              "2 - Retrouver mes aliments substitués" + "\n\n" +
+              "Vous pouvez quitter l’application à tout moment en écrivant "
+              "exit dans le champ de sélection.")
+        choice = input("\n" + "Votre choix:")
         if choice == "1":
             self.show_categories()
         elif choice == "2":
@@ -45,8 +45,8 @@ class Controller:
         """displays a list of all categories in database.
            one category can be selected.
            """
-        print("Voici la liste des catégories disponible." + "\n" +
-              "Choisissez le numéro de la catégorie qui vous intéresse.")
+        print("\n" + "Voici la liste des catégories disponible." + "\n" +
+              "Choisissez le numéro de la catégorie qui vous intéresse." + "\n")
         # select all categories from database
         category = Category()
         category = category.create()
@@ -63,7 +63,7 @@ class Controller:
             lookup[str(row)] = name
             row += 1
         # wait for input
-        choice = input("Votre choix:")
+        choice = input("\n" + "Votre choix:")
         # select category from input
         if choice in lookup:
             cid = [x["cid"] for x in read if x["name"] == lookup[choice]]
@@ -82,9 +82,10 @@ class Controller:
         """displays a list of all the products within a category.
            one product can be selected.
            """
-        print("Voici la liste des produits disponible dans cette catégorie."
-              + "\n" +
-              "Merci de choisir le numéro du produit qui vous intéresse.")
+        print("\n" + "Voici la liste des produits disponible dans cette "
+              "catégorie." + "\n" +
+              "Merci de choisir le numéro du produit qui vous intéresse."
+              + "\n")
         # select all product for the category selected
         product = Product()
         product = product.create()
@@ -102,7 +103,7 @@ class Controller:
             lookup[str(row)] = i["pid"]
             row += 1
         # wait for input
-        choice = input("Votre choix:")
+        choice = input("\n" + "Votre choix:")
         # identify product from input
         if choice in lookup:
             pid = [x["pid"] for x in read if x["pid"] == lookup[choice]]
@@ -121,7 +122,7 @@ class Controller:
         """displays the selected product and a substitution
            (higher or equal rating)
            """
-        print("Voici les informations du produit que vous avez choisi:")
+        print("\n" + "Voici les informations du produit que vous avez choisi:")
         # retrieve product information
         product = Product()
         product = product.create()
@@ -134,8 +135,9 @@ class Controller:
                "Description: " + read["description"] + "\n" + \
                "url: " + read["url"] + "\n" + \
                "Note nutri-score: " + read["rating"]
-        print(prod + "\n" + "Voici un autre produit ayant une note supérieure "
-                            "ou égale au produit que vous avez sélectionnez:")
+        print(prod + "\n\n" + "Voici un autre produit ayant une note "
+                              "supérieure ou égale au produit que vous avez "
+                              "sélectionnez:")
         # find other product in the same category
         read = self.table.read(product, cid=cid)
         rating_list = {x["pid"]: x["rating"] for x in read}
@@ -152,7 +154,8 @@ class Controller:
               "Note nutri-score: " + read["rating"]
         print(sub)
         # propose to save this search
-        choice = input("Voulez vous sauvegarder cette recherche (Oui/Non)?")
+        choice = input("\n" + "Voulez vous sauvegarder cette recherche "
+                              "(Oui/Non)?")
         # user wants to save this search
         if choice.lower() == "oui" or choice.lower() == "o":
             self.save_substitution(pid, sub_pid)
@@ -175,7 +178,7 @@ class Controller:
         # case for previous choice was bad input
         if not pid and not sub_pid:
             choice = input(
-                "Votre recherche a été sauvegardée. "
+                "\n" + "Votre recherche a été sauvegardée." + "\n" +
                 "Voulez vous faire une autre recherche (Oui/Non)?")
             # user wants to do another search
             if choice.lower() == "oui" or choice.lower() == "o":
@@ -199,13 +202,13 @@ class Controller:
             # been done
             try:
                 self.table.insert(history)
-                choice = input("Votre recherche a été sauvegardée. "
-                               "Voulez vous faire une autre recherche "
-                               "(Oui/Non)?")
+                choice = input(
+                    "\n" + "Votre recherche a été sauvegardée." + "\n" +
+                    "Voulez vous faire une autre recherche (Oui/Non)?")
             except IntegrityError:
-                choice = input("Cette recherche a déjà été sauvegardée. "
-                               "Voulez-vous faire une autre recherche "
-                               "(Oui/Non)?")
+                choice = input(
+                    "\n" + "Cette recherche a déjà été sauvegardée." + "\n" +
+                    "Voulez-vous faire une autre recherche (Oui/Non)?")
             # user wants to do another search
             if choice.lower() == "oui" or choice.lower() == "o":
                 self.landing()
@@ -246,5 +249,6 @@ class Controller:
             sub = "Nom du produit: " + sub_read["name"] + ", " + \
                   "Quantité du produit: " + sub_read["quantity"] + ", " + \
                   "Note Nutri-score: " + sub_read["rating"]
-            display = "Sauvegarde du " + str(date) + ":\n" + prod + "\n" + sub
+            display = "\n" + "Sauvegarde du " + str(date) + ":\n" + prod + \
+                      "\n" + sub + "\n"
             print(display)
