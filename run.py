@@ -13,8 +13,8 @@ def main():
         while app.close == 0:
             app.landing()
     else:
-        print("La base de données est mal configurée. Merci de verifier votre "
-              "configuration.")
+        print("La base de données est mal configurée. Merci de verifier"
+              " votre configuration.")
 
 
 if __name__ == "__main__":

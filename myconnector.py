@@ -106,10 +106,10 @@ class Table:
         # WHERE condition;
         if d_table == "Products":
             v_list = ["{}={}".format(x, d_values.get(x))
-                      for x in d_values if x != 'pid']
+                      for x in d_values if x != "pid"]
         else:
             v_list = ["{}={}".format(x, d_values.get(x))
-                      for x in d_values if x != 'cid']
+                      for x in d_values if x != "cid"]
         separator = ", "
         values = separator.join(v_list)
         # create selector

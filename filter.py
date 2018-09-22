@@ -133,7 +133,7 @@ class Filter:
             # get cid from category name
             cat = Category(category)
             cat = cat.create()
-            arg = '"' + category + '"'
+            arg = "\"" + category + "\""
             cid = table.read(cat, name=arg)
             cid = cid[0]
             cid = cid["cid"]
