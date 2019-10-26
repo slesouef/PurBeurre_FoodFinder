@@ -3,6 +3,8 @@ Create a programme for the fictional startup PurBeurre that will interact with
 the Open Food Facts database in order to extract products, compare them, and 
 propose a healthier substitute that is of interest to the user.
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # Fonctionalities:
 The user will be presented with numbered list of options in order to interact 
 with the application
